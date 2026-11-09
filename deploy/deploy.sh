@@ -157,7 +157,13 @@ wait_health() {
   local expected=$1 attempt
   for ((attempt=1; attempt<=HEALTH_ATTEMPTS; attempt++)); do
     if [[ $component == web ]]; then
-      if probe_web "$expected" http://127.0.0.1:8088 && { [[ $PUBLIC_CHECKS == 0 ]] || probe_web "$expected" "$WEB_BASE_URL"; }; then return 0; fi
+      if probe_web "$expected" http://127.0.0.1:8088; then
+        if [[ $PUBLIC_CHECKS == 0 ]]; then return 0; fi
+        if [[ $FRONTEND_HOSTING == netlify ]]; then
+          if probe_apk "$PUBLIC_API_URL" "$expected"; then return 0; fi
+        elif probe_web "$expected" "$WEB_BASE_URL"; then return 0
+        fi
+      fi
     elif [[ $component == landing ]]; then
       if probe_landing "$expected" http://127.0.0.1:8089 && { [[ $PUBLIC_CHECKS == 0 ]] || probe_landing "$expected" "$LANDING_BASE_URL"; }; then return 0; fi
     elif probe_api "$API_READY_URL" "$expected" && { [[ $PUBLIC_CHECKS == 0 ]] || probe_api "$PUBLIC_API_READY_URL" "$expected"; }; then return 0
@@ -213,6 +219,9 @@ done
 # shellcheck source=/dev/null
 source "$ROOT/shared/server.conf"
 [[ $PUBLIC_CHECKS =~ ^[01]$ && $RUN_MIGRATIONS =~ ^[01]$ ]] || fail 'Invalid server flags.'
+FRONTEND_HOSTING=${FRONTEND_HOSTING:-vps}
+[[ $FRONTEND_HOSTING == vps || $FRONTEND_HOSTING == netlify ]] || fail 'Invalid FRONTEND_HOSTING.'
+[[ $FRONTEND_HOSTING != netlify || $component != landing ]] || fail 'La landing se publica en Netlify desde Actions.'
 export PM2_HOME="$ROOT/pm2"
 for binary in curl tar sha256sum flock; do
   command -v "$binary" >/dev/null || fail "No se encontró $binary en PATH."

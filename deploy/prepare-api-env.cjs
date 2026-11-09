@@ -53,7 +53,12 @@ if (require.main === module) {
     )("dotenv");
     const sites = parseEnv(
       fs.readFileSync(
-        path.resolve(__dirname, "../config/environments/production.env"),
+        path.resolve(
+          __dirname,
+          process.env.DOCIA_MIGRATION_SOURCE === "legacy-cloud"
+            ? "../config/environments/legacy-cloud.env"
+            : "../config/environments/production.env",
+        ),
         "utf8",
       ),
     );

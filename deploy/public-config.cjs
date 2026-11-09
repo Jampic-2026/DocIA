@@ -127,7 +127,8 @@ function nginxSites(config) {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_read_timeout 120s;
-  }`
+  }
+  ${downloads}`
         : `# DocIA managed ${component === "landing" ? "landing releases" : "Android downloads"}
   root ${root}/current-${component}/${component};
   index index.html;
@@ -177,7 +178,7 @@ server {
   return result;
 }
 
-function render(config, directory) {
+function render(config, directory, { apiOnly = false } = {}) {
   const normalized = validate(config);
   fs.mkdirSync(directory, { recursive: true });
   const values = {
@@ -199,20 +200,37 @@ function render(config, directory) {
     "nginx-web-security.conf": securityHeaders(normalized.PUBLIC_API_URL),
     ...nginxSites(normalized),
   };
+  if (apiOnly) {
+    delete values["docia-web.conf"];
+    delete values["docia-landing.conf"];
+    values["docia-http-bootstrap.conf"] = values[
+      "docia-http-bootstrap.conf"
+    ].replace(
+      /server_name [^;]+;/,
+      `server_name ${new URL(normalized.PUBLIC_API_URL).hostname};`,
+    );
+  }
   for (const [name, content] of Object.entries(values))
     fs.writeFileSync(path.join(directory, name), content);
 }
 
-module.exports = { validate, parseEnv, fromEnvironment, render };
+module.exports = {
+  validate,
+  parseEnv,
+  fromEnvironment,
+  render,
+  securityHeaders,
+};
 if (require.main === module) {
   try {
-    if (process.argv[2] !== "render" || !process.argv[3])
+    if (!["render", "render-api"].includes(process.argv[2]) || !process.argv[3])
       throw Error(
         "Uso: node deploy/public-config.cjs render public-sites.env [directorio-salida]",
       );
     render(
       parseEnv(fs.readFileSync(process.argv[3], "utf8")),
       process.argv[4] || "deploy/generated",
+      { apiOnly: process.argv[2] === "render-api" },
     );
     console.log(
       "Configuración pública y plantillas generadas. No se modificó el servidor ni Nginx.",

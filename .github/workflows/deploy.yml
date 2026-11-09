@@ -118,13 +118,13 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: node ../deploy/write-landing-config.cjs
       - run: npm run build
-      - name: Package verified landing
+      - name: Prepare verified Netlify landing
         working-directory: .
-        run: node deploy/package.cjs landing
+        run: node deploy/netlify-deploy.cjs stage landing
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2 / Node 24
         with:
-          name: landing
-          path: release/*
+          name: landing-build
+          path: payload/landing/
           if-no-files-found: error
           retention-days: 3
 
@@ -225,8 +225,8 @@ jobs:
           path: release
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2 / Node 24
         with:
-          name: landing
-          path: release
+          name: landing-build
+          path: payload/landing
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2 / Node 24
         with:
           name: web-build
@@ -236,7 +236,14 @@ jobs:
           name: docia-android
           path: android-release
       - run: node deploy/package.cjs web
-      - name: Publish API, web with APK, then landing
+      - run: node deploy/netlify-deploy.cjs stage web
+      - name: Check both Netlify sites before changing the VPS
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_WEB_SITE_ID: ${{ vars.NETLIFY_WEB_SITE_ID }}
+          NETLIFY_LANDING_SITE_ID: ${{ vars.NETLIFY_LANDING_SITE_ID }}
+        run: node deploy/netlify-deploy.cjs preflight
+      - name: Publish API and signed APK on the isolated VPS installation
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -246,4 +253,11 @@ jobs:
         run: |
           bash deploy/ssh-deploy.sh api
           bash deploy/ssh-deploy.sh web
-          bash deploy/ssh-deploy.sh landing
+      - name: Publish web, then landing on Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_WEB_SITE_ID: ${{ vars.NETLIFY_WEB_SITE_ID }}
+          NETLIFY_LANDING_SITE_ID: ${{ vars.NETLIFY_LANDING_SITE_ID }}
+        run: |
+          node deploy/netlify-deploy.cjs publish web
+          node deploy/netlify-deploy.cjs publish landing

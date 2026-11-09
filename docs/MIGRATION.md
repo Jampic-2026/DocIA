@@ -1,5 +1,7 @@
 # Migración a un repositorio único
 
+> El workflow actual publica los frontends en Netlify y API/APK en el VPS. Seguir **[NETLIFY.md](NETLIFY.md)** para ese esquema. Este documento conserva la propuesta anterior con los tres sitios en el VPS; sus pasos de cutover no corresponden a la instalación paralela DuckDNS/Netlify.
+
 ## 1. Crear y subir el repositorio nuevo
 
 Crear un repositorio **privado y vacío** llamado `DocIA` en `Jampic-2026`. No agregar README ni `.gitignore` desde GitHub. Usar esta carpeta nueva, que está dentro de la carpeta de trabajo general y junto a las aplicaciones originales:

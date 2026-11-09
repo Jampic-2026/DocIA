@@ -97,6 +97,7 @@ args=("$@")
 for ((i=0; i<${#args[@]}; i++)); do
   if [[ ${args[$i]} == --output ]]; then output=${args[$((i+1))]}; fi
 done
+
 current=$(basename "$(readlink -f "$TEST_ROOT/current-$TEST_COMPONENT")")
 if [[ $current == "$TEST_COMPONENT-$TEST_NEW" ]]; then
   if [[ $TEST_MODE == api-failure && $url == *health/ready ]]; then exit 22; fi
@@ -169,6 +170,7 @@ run_deploy() {
     [[ $(readlink -f "$TEST_ROOT/current-web") == "$TEST_ROOT/releases/web-$old" ]]
   fi
 }
+if [[ ${DOCIA_DEPLOY_TEST_SCOPE:-all} != netlify ]]; then
 for scenario in success shared-sites dependency-failure migration-failure restart-failure api-failure public-api-failure wrong-version checksum-failure unsafe-archive; do
   fixture api "$scenario"
   if [[ $scenario == checksum-failure ]]; then printf '%064d\n' 0 > "$TEST_ROOT/inbox/api-$new.sha256"; fi
@@ -225,3 +227,25 @@ for component in api web landing; do
     printf 'PASS first installation %s: %s\n' "$component" "$mode"
   done
 done
+fi
+
+# Netlify serves the public frontends. VPS activation checks the signed APK at
+# the API origin, never a Netlify marker that has not been published yet.
+fixture web netlify-success
+export TEST_MODE=success
+printf 'FRONTEND_HOSTING=netlify\n' >> "$TEST_ROOT/shared/server.conf"
+run_deploy
+grep -Fq 'https://api.example.com/downloads/DocIA.apk' "$TEST_ROOT/requests"
+if grep -Fq 'https://app.example.com/' "$TEST_ROOT/requests"; then echo 'Netlify frontend checked before publishing'; exit 1; fi
+printf 'PASS hybrid: public APK on API origin; Netlify publication remains independent\n'
+
+fixture web netlify-apk-failure
+export TEST_MODE=apk-checksum-failure
+printf 'FRONTEND_HOSTING=netlify\n' >> "$TEST_ROOT/shared/server.conf"
+run_deploy
+printf 'PASS hybrid: corrupt public APK rolls back VPS download release\n'
+
+fixture landing blocked-netlify
+printf 'FRONTEND_HOSTING=netlify\n' >> "$TEST_ROOT/shared/server.conf"
+run_deploy
+printf 'PASS hybrid: VPS rejects landing publication in Netlify mode\n'

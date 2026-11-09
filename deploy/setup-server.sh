@@ -5,6 +5,14 @@ umask 077
 ROOT=/var/www/docia-monorepo/deploy
 LEGACY=/var/www/docia/deploy
 REPO=/var/www/docia-monorepo/repository
+hosting=vps
+if [[ ${1:-} == --netlify && $# == 1 ]]; then
+  hosting=netlify
+  export DOCIA_MIGRATION_SOURCE=legacy-cloud
+elif (( $# != 0 )); then
+  echo 'Usage: setup-server.sh [--netlify]'
+  exit 1
+fi
 [[ $EUID == 0 && $(realpath "$(dirname "$0")/..") == "$REPO" ]] || { echo 'Run as root from /var/www/docia-monorepo/repository/deploy/setup-server.sh'; exit 1; }
 id docia-deploy >/dev/null
 [[ ! -L /var/www/docia-monorepo && ! -L "$ROOT" ]] || exit 1
@@ -49,6 +57,7 @@ HEALTH_DELAY=3
 EOF
 chown docia-deploy:docia-deploy "$ROOT/shared/server.conf"
 chmod 600 "$ROOT/shared/server.conf"
+printf 'FRONTEND_HOSTING=%s\n' "$hosting" >> "$ROOT/shared/server.conf"
 preview=/etc/nginx/conf.d/docia-monorepo-preview.conf
 [[ ! -e "$preview" && ! -L "$preview" ]] || { echo 'Preview file exists; review it manually.'; exit 1; }
 install -m 644 "$REPO/deploy/nginx-preview.conf" "$preview"
@@ -56,4 +65,4 @@ if ! nginx -t; then rm -f -- "$preview"; exit 1; fi
 if ! systemctl reload nginx; then rm -f -- "$preview"; nginx -t && systemctl reload nginx; exit 1; fi
 install -m 644 "$REPO/deploy/docia-monorepo-pm2.service" /etc/systemd/system/docia-monorepo-pm2.service
 systemctl daemon-reload
-echo 'PREPARADO: producción conserva sus rutas. Ejecutar el primer workflow; luego habilitar el servicio y realizar el cambio de Nginx según docs/MIGRATION.md.'
+echo 'PREPARADO: producción conserva sus rutas. Para API DuckDNS y frontends Netlify, seguir docs/NETLIFY.md; no ejecutar cutover.cjs.'

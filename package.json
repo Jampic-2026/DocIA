@@ -6,8 +6,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "config:render": "node deploy/public-config.cjs render config/environments/production.env",
-    "test:tools": "node --test deploy/tests/public-config.test.cjs deploy/tests/web-config.test.cjs deploy/tests/android-release.test.cjs deploy/tests/package.test.cjs deploy/tests/cutover.test.cjs deploy/tests/legacy-urls.test.cjs deploy/tests/api-inventory.test.cjs",
+    "config:render": "node deploy/public-config.cjs render-api config/environments/production.env",
+    "test:tools": "node --test deploy/tests/public-config.test.cjs deploy/tests/web-config.test.cjs deploy/tests/android-release.test.cjs deploy/tests/package.test.cjs deploy/tests/cutover.test.cjs deploy/tests/legacy-urls.test.cjs deploy/tests/api-inventory.test.cjs deploy/tests/netlify.test.cjs",
     "audit:parity": "node deploy/audit-parity.cjs --write-report",
     "audit:api-env": "node deploy/audit-api-env.cjs --write-report",
     "test:api-env": "node --test deploy/tests/api-env.test.cjs",
