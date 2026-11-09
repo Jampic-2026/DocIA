@@ -16,23 +16,42 @@ const managedKeys = new Set([
 ]);
 function normalizePrivateEnvironment(source, sites, parse) {
   const before = parse(source);
-  validateOverrides(before, sites);
-  const normalized = source
+  const routing = validateOverrides(before, sites);
+  // Centralized PUBLIC_WEB_URL otherwise defaults to hash routing at runtime.
+  // Pin an inferred path mode in the NEW copy before removing legacy URLs.
+  const pinPathRouting = !before.WEB_ROUTING_MODE && routing === "path";
+  let normalized = source
     .split(/(?<=\n)/)
     .filter((line) => {
       const match = line.match(
         /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=/,
       );
-      return !match || !managedKeys.has(match[1]);
+      return (
+        !match ||
+        (!managedKeys.has(match[1]) &&
+          !(pinPathRouting && match[1] === "WEB_ROUTING_MODE"))
+      );
     })
     .join("");
+  if (pinPathRouting) {
+    const newline = source.includes("\r\n") ? "\r\n" : "\n";
+    normalized += `${normalized && !normalized.endsWith("\n") ? newline : ""}WEB_ROUTING_MODE=path${newline}`;
+  }
   const after = parse(normalized);
   for (const key of Object.keys(before)) {
-    if (!managedKeys.has(key) && before[key] !== after[key])
+    if (
+      !managedKeys.has(key) &&
+      !(pinPathRouting && key === "WEB_ROUTING_MODE") &&
+      before[key] !== after[key]
+    )
       throw Error(
         `No se pudo conservar ${key}; se detuvo la preparación sin mostrar valores privados.`,
       );
   }
+  if (pinPathRouting && after.WEB_ROUTING_MODE !== "path")
+    throw Error(
+      "No se pudo conservar el modo de navegación de los enlaces públicos.",
+    );
   for (const key of managedKeys)
     if (key in after)
       throw Error(`La variable pública ${key} no se normalizó correctamente.`);

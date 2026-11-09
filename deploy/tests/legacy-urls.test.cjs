@@ -31,6 +31,54 @@ test("retains explicitly configured path routing", () =>
       sites,
     ),
   ));
+
+test("infers direct routing from standard legacy URLs without a configured mode", () => {
+  assert.equal(
+    validateOverrides(
+      {
+        PASSWORD_RESET_URL: `${sites.PUBLIC_WEB_URL}/password-reset`,
+        REGISTRATION_URL: `${sites.PUBLIC_WEB_URL}/register/complete`,
+        STRIPE_PAYMENT_RETURN_URL: `${sites.PUBLIC_WEB_URL}/payments/return`,
+      },
+      sites,
+    ),
+    "path",
+  );
+});
+
+test("does not infer over an explicit mode or accept mixed navigation modes", () => {
+  for (const env of [
+    {
+      WEB_ROUTING_MODE: "hash",
+      PASSWORD_RESET_URL: `${sites.PUBLIC_WEB_URL}/password-reset`,
+    },
+    {
+      PASSWORD_RESET_URL: `${sites.PUBLIC_WEB_URL}/password-reset`,
+      REGISTRATION_URL: `${sites.PUBLIC_WEB_URL}/#/register/complete`,
+    },
+    { WEB_ROUTING_MODE: "invalid" },
+  ]) {
+    assert.throws(() => validateOverrides(env, sites));
+  }
+});
+
+test("routing inference preserves validation of query parameters and fragments", () => {
+  for (const suffix of ["?token=private-value", "#private-value", "/"]) {
+    assert.throws(
+      () =>
+        validateOverrides(
+          {
+            PASSWORD_RESET_URL: `${sites.PUBLIC_WEB_URL}/password-reset`,
+            REGISTRATION_URL: `${sites.PUBLIC_WEB_URL}/register/complete${suffix}`,
+          },
+          sites,
+        ),
+      (error) =>
+        error.message.includes("REGISTRATION_URL") &&
+        !error.message.includes("private-value"),
+    );
+  }
+});
 for (const key of [
   "PUBLIC_API_URL",
   "PASSWORD_RESET_URL",

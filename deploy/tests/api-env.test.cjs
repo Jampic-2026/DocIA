@@ -71,3 +71,38 @@ test("custom return routes are not silently replaced", () =>
       error.message.includes("PASSWORD_RESET_URL") &&
       !error.message.includes("private-value"),
   ));
+
+test("pins inferred path routing so centralized URLs keep the legacy navigation mode", () => {
+  for (const mode of ["", "WEB_ROUTING_MODE=\r\n"]) {
+    const privatePart =
+      "DB_PASSWORD='synthetic#password'\r\nUNKNOWN_TOKEN='synthetic-value'";
+    const source =
+      mode +
+      `PASSWORD_RESET_URL=${sites.PUBLIC_WEB_URL}/password-reset\r\n` +
+      `REGISTRATION_URL=${sites.PUBLIC_WEB_URL}/register/complete\r\n` +
+      `STRIPE_PAYMENT_RETURN_URL=${sites.PUBLIC_WEB_URL}/payments/return\r\n` +
+      privatePart;
+    const normalized = normalizePrivateEnvironment(source, sites, parse);
+    assert.equal(normalized, `${privatePart}\r\nWEB_ROUTING_MODE=path\r\n`);
+    assert.equal(parse(normalized).WEB_ROUTING_MODE, "path");
+    assert.deepEqual(parse(normalized), {
+      ...parse(privatePart),
+      WEB_ROUTING_MODE: "path",
+    });
+    assert.equal(
+      normalizePrivateEnvironment(normalized, sites, parse),
+      normalized,
+    );
+  }
+});
+
+test("retains explicit modes and the existing hash default when no mode is inferred", () => {
+  for (const mode of ["hash", "path"]) {
+    const source = `WEB_ROUTING_MODE=${mode}\nDB_PASSWORD='synthetic#password'\n`;
+    assert.equal(normalizePrivateEnvironment(source, sites, parse), source);
+  }
+  const source = `PASSWORD_RESET_URL='${sites.PUBLIC_WEB_URL}/#/password-reset'\nDB_PASSWORD='synthetic#password'\n`;
+  const result = normalizePrivateEnvironment(source, sites, parse);
+  assert.equal(result, "DB_PASSWORD='synthetic#password'\n");
+  assert.equal(parse(result).WEB_ROUTING_MODE, undefined);
+});
