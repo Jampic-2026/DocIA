@@ -1,0 +1,42 @@
+# Actual credentials and local environment files never enter this repository.
+secrets/
+**/secrets/
+**/.env
+**/.env.*
+!**/.env.example
+**/key.properties
+**/local.properties
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.key
+client_secret*.json
+**/client_secret*.json
+**/*service-account*.json
+**/*service_account*.json
+**/google_meet_api_key.json
+
+# Build outputs, dependencies and machine-specific caches.
+**/node_modules/
+**/dist/
+**/build/
+**/.dart_tool/
+**/.gradle/
+**/.pub-cache/
+**/.flutter-plugins*
+**/coverage/
+**/.DS_Store
+**/*.log
+*.apk
+*.aab
+deploy/generated/
+release/
+payload/
+android-release/
+.validation/
+
+# Public production config is intentionally versioned; local overrides are not.
+config/environments/*.local.env
+**/config/ci-production.json
+**/.git/

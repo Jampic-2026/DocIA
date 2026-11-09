@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "495959101554",
+    "project_id": "cedar-router-479423-p5",
+    "storage_bucket": "cedar-router-479423-p5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495959101554:android:f2f55c0c2fc3a10bab32eb",
+        "android_client_info": {
+          "package_name": "com.jampic.jampic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495959101554-u1hv5n7dhqk1qhu3khefobt3gh84gun6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIpgDvV41RBM16G4NsIoWj_gTpFbMgpOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495959101554-u1hv5n7dhqk1qhu3khefobt3gh84gun6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

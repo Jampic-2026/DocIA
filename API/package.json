@@ -1,0 +1,98 @@
+{
+  "name": "api-jampic",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API modular para Jampic / DocIA.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "lint": "eslint \"src/**/*.ts\" \"scripts/**/*.ts\" --fix",
+    "lint:check": "eslint \"src/**/*.ts\" \"scripts/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"scripts/**/*.ts\" \"test/**/*.ts\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:apply": "tsx scripts/run-sql-files.ts",
+    "db:migrate": "tsx scripts/run-migrations.ts",
+    "db:seed:local-flow": "tsx scripts/run-local-full-flow.ts",
+    "db:create": "tsx scripts/create-database.ts"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.0.1",
+    "@fastify/helmet": "^13.0.1",
+    "@fastify/multipart": "^10.1.0",
+    "@google-cloud/storage": "^8.2.0",
+    "@nestjs/common": "^11.2.7",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.2.7",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/platform-fastify": "^11.2.7",
+    "@nestjs/throttler": "^6.7.1",
+    "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "fastify-raw-body": "^6.0.1",
+    "firebase-admin": "^14.5.0",
+    "openai": "^6.49.0",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "resend": "^6.18.1",
+    "rxjs": "^7.8.2",
+    "stripe": "^22.5.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.10",
+    "@nestjs/schematics": "^11.0.7",
+    "@nestjs/testing": "^11.1.6",
+    "@types/bcrypt": "^6.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.10",
+    "@types/pg": "^8.15.4",
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
+    "eslint": "^9.30.1",
+    "jest": "^30.0.4",
+    "prettier": "^3.6.2",
+    "source-map-support": "^0.5.21",
+    "supertest": "^7.1.3",
+    "ts-jest": "^29.4.0",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.36.0"
+  },
+  "overrides": {
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": "^4.3.2"
+    },
+    "fastify": "^5.12.5",
+    "gaxios": {
+      "uuid": "^11.1.1"
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}

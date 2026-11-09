@@ -1,0 +1,5 @@
+{
+  "APP_ENV": "staging",
+  "API_BASE_URL": "https://api-staging.example.com/api/v1/",
+  "STRIPE_PUBLISHABLE_KEY": "pk_test_replace-with-public-stripe-key"
+}

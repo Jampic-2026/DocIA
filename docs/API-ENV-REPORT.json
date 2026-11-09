@@ -1,0 +1,497 @@
+{
+  "scope": "Variable names and public deployment defaults only. Actual private values remain on the VPS and were not read.",
+  "originalComparison": {
+    "available": true,
+    "originalVariables": 66,
+    "missing": [],
+    "changedExamples": [],
+    "added": [
+      "HOST",
+      "FCM_SERVICE_ACCOUNT_PATH"
+    ]
+  },
+  "originalContractVariables": 66,
+  "totalVariables": 68,
+  "variables": [
+    {
+      "key": "NODE_ENV",
+      "optional": false,
+      "destination": "deploy/ecosystem.config.cjs → process environment",
+      "classification": "deployment",
+      "effectiveValue": "production",
+      "note": "La copia privada conserva el valor anterior, pero este ajuste de la instalación nueva tiene prioridad."
+    },
+    {
+      "key": "PORT",
+      "optional": false,
+      "destination": "deploy/ecosystem.config.cjs → process environment",
+      "classification": "deployment",
+      "effectiveValue": "3100",
+      "note": "La copia privada conserva el valor anterior, pero este ajuste de la instalación nueva tiene prioridad."
+    },
+    {
+      "key": "HOST",
+      "optional": false,
+      "destination": "deploy/ecosystem.config.cjs → process environment",
+      "classification": "deployment",
+      "effectiveValue": "127.0.0.1",
+      "note": "La copia privada conserva el valor anterior, pero este ajuste de la instalación nueva tiene prioridad."
+    },
+    {
+      "key": "API_PREFIX",
+      "optional": false,
+      "destination": "config/environments/production.env → release/PUBLIC_CONFIG.env",
+      "classification": "public",
+      "note": "Se retira de la copia privada; Nest carga la configuración pública de la release."
+    },
+    {
+      "key": "DB_HOST",
+      "optional": false,
+      "destination": "deploy/shared/api.env y, con credenciales separadas, deploy/shared/migrations.env",
+      "classification": "private-database",
+      "note": "Cada archivo se copia de su propio equivalente anterior: no se copian credenciales runtime sobre las de migraciones."
+    },
+    {
+      "key": "DB_PORT",
+      "optional": false,
+      "destination": "deploy/shared/api.env y, con credenciales separadas, deploy/shared/migrations.env",
+      "classification": "private-database",
+      "note": "Cada archivo se copia de su propio equivalente anterior: no se copian credenciales runtime sobre las de migraciones."
+    },
+    {
+      "key": "DB_NAME",
+      "optional": false,
+      "destination": "deploy/shared/api.env y, con credenciales separadas, deploy/shared/migrations.env",
+      "classification": "private-database",
+      "note": "Cada archivo se copia de su propio equivalente anterior: no se copian credenciales runtime sobre las de migraciones."
+    },
+    {
+      "key": "DB_USER",
+      "optional": false,
+      "destination": "deploy/shared/api.env y, con credenciales separadas, deploy/shared/migrations.env",
+      "classification": "private-database",
+      "note": "Cada archivo se copia de su propio equivalente anterior: no se copian credenciales runtime sobre las de migraciones."
+    },
+    {
+      "key": "DB_PASSWORD",
+      "optional": false,
+      "destination": "deploy/shared/api.env y, con credenciales separadas, deploy/shared/migrations.env",
+      "classification": "private-database",
+      "note": "Cada archivo se copia de su propio equivalente anterior: no se copian credenciales runtime sobre las de migraciones."
+    },
+    {
+      "key": "DB_SSL",
+      "optional": false,
+      "destination": "deploy/shared/api.env y, con credenciales separadas, deploy/shared/migrations.env",
+      "classification": "private-database",
+      "note": "Cada archivo se copia de su propio equivalente anterior: no se copian credenciales runtime sobre las de migraciones."
+    },
+    {
+      "key": "DB_ADMIN_DATABASE",
+      "optional": false,
+      "destination": "Entorno administrativo para scripts/create-database.ts",
+      "classification": "administrative",
+      "note": "Se conserva si existía. No lo usa el servidor HTTP ni db:migrate; el despliegue no crea bases."
+    },
+    {
+      "key": "DB_ADMIN_URL",
+      "optional": true,
+      "destination": "Entorno administrativo para scripts/create-database.ts",
+      "classification": "administrative",
+      "note": "Se conserva si existía. No lo usa el servidor HTTP ni db:migrate; el despliegue no crea bases."
+    },
+    {
+      "key": "DATABASE_URL",
+      "optional": true,
+      "destination": "deploy/shared/api.env y, con credenciales separadas, deploy/shared/migrations.env",
+      "classification": "private-database",
+      "note": "Cada archivo se copia de su propio equivalente anterior: no se copian credenciales runtime sobre las de migraciones."
+    },
+    {
+      "key": "DB_APPLY_LOCAL_SEEDS",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "DB_ENFORCE_RLS_ROLE",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "JWT_ACCESS_SECRET",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "JWT_REFRESH_SECRET",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "JWT_ACCESS_EXPIRES_IN",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "JWT_REFRESH_EXPIRES_IN",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "MFA_ENCRYPTION_KEY",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "SMS_ENABLED",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "SMS_API_URL",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "SMS_API_TOKEN",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "SMS_SENDER",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "FCM_ENABLED",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "FCM_PROJECT_ID",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "FCM_CLIENT_EMAIL",
+      "optional": true,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "FCM_PRIVATE_KEY",
+      "optional": true,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "FCM_SERVICE_ACCOUNT_PATH",
+      "optional": true,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "PUBLIC_API_URL",
+      "optional": false,
+      "destination": "config/environments/production.env → release/PUBLIC_CONFIG.env",
+      "classification": "public",
+      "note": "Se retira de la copia privada; Nest carga la configuración pública de la release."
+    },
+    {
+      "key": "PUBLIC_WEB_URL",
+      "optional": false,
+      "destination": "config/environments/production.env → release/PUBLIC_CONFIG.env",
+      "classification": "public",
+      "note": "Se retira de la copia privada; Nest carga la configuración pública de la release."
+    },
+    {
+      "key": "WEB_ROUTING_MODE",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "CORS_ORIGINS",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "PRESCRIPTION_SIGNING_SECRET",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STORAGE_PROVIDER",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STORAGE_ROOT",
+      "optional": false,
+      "destination": "deploy/ecosystem.config.cjs → process environment",
+      "classification": "deployment",
+      "effectiveValue": "/var/www/docia-monorepo/deploy/shared/storage",
+      "note": "La copia privada conserva el valor anterior, pero este ajuste de la instalación nueva tiene prioridad."
+    },
+    {
+      "key": "STORAGE_MAX_FILE_SIZE_MB",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STORAGE_DAILY_UPLOAD_MB",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STORAGE_SIGNING_SECRET",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STORAGE_SIGNED_URL_EXPIRES_SECONDS",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "GCS_BUCKET_NAME",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "GOOGLE_APPLICATION_CREDENTIALS",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "EXTERNAL_HTTP_TIMEOUT_MS",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STRIPE_ENABLED",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STRIPE_SECRET_KEY",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "STRIPE_PAYMENT_RETURN_URL",
+      "optional": true,
+      "destination": "API/src/config/public-urls.ts",
+      "classification": "derived-public",
+      "note": "Se deriva de las URL centrales y WEB_ROUTING_MODE. El instalador detiene rutas personalizadas que no coincidan."
+    },
+    {
+      "key": "EMAIL_ENABLED",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "EMAIL_PROVIDER",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "RESEND_API_KEY",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "EMAIL_FROM",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "PASSWORD_RESET_URL",
+      "optional": true,
+      "destination": "API/src/config/public-urls.ts",
+      "classification": "derived-public",
+      "note": "Se deriva de las URL centrales y WEB_ROUTING_MODE. El instalador detiene rutas personalizadas que no coincidan."
+    },
+    {
+      "key": "REGISTRATION_URL",
+      "optional": true,
+      "destination": "API/src/config/public-urls.ts",
+      "classification": "derived-public",
+      "note": "Se deriva de las URL centrales y WEB_ROUTING_MODE. El instalador detiene rutas personalizadas que no coincidan."
+    },
+    {
+      "key": "AI_ENABLED",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "AI_PROVIDER",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "OPENAI_MODEL",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "OPENAI_PROJECT_ID",
+      "optional": true,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "OPENAI_ORGANIZATION_ID",
+      "optional": true,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "MAPS_ENABLED",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "MAPS_PROVIDER",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "GOOGLE_MAPS_SERVER_API_KEY",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "TELEMEDICINE_ENABLED",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "TELEMEDICINE_PROVIDER",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "GOOGLE_OAUTH_CLIENT_ID",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "GOOGLE_OAUTH_CLIENT_SECRET",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    },
+    {
+      "key": "GOOGLE_OAUTH_REDIRECT_URI",
+      "optional": true,
+      "destination": "API/src/config/public-urls.ts",
+      "classification": "derived-public",
+      "note": "Se deriva de las URL centrales y WEB_ROUTING_MODE. El instalador detiene rutas personalizadas que no coincidan."
+    },
+    {
+      "key": "GOOGLE_OAUTH_TOKEN_ENCRYPTION_KEY",
+      "optional": false,
+      "destination": "deploy/shared/api.env → release/api/.env",
+      "classification": "private-runtime",
+      "note": "Se conserva exactamente el valor del entorno anterior; no se toma del ejemplo ni se exporta a Flutter o landing."
+    }
+  ]
+}

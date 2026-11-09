@@ -1,0 +1,522 @@
+{
+  "scope": "Local Chrome comparison against the recorded Git baseline builds, identical public .cloud configuration and synthetic API responses; not a test of the live VPS.",
+  "cases": [
+    {
+      "id": "flutter-1440-light-_register",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-light-_register-baseline.png",
+      "monorepo": "flutter-1440-light-_register-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-light-_password-reset",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-light-_password-reset-baseline.png",
+      "monorepo": "flutter-1440-light-_password-reset-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-light-_register_complete-token",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-light-_register_complete-token-baseline.png",
+      "monorepo": "flutter-1440-light-_register_complete-token-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-light-_password-reset-token",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-light-_password-reset-token-baseline.png",
+      "monorepo": "flutter-1440-light-_password-reset-token-monorepo.png"
+    },
+    {
+      "id": "flutter-validation-1440-light",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-validation-1440-light-baseline.png",
+      "monorepo": "flutter-validation-1440-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-patient-1440-light",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-patient-1440-light-baseline.png",
+      "monorepo": "flutter-role-patient-1440-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-doctor_general-1440-light",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-doctor_general-1440-light-baseline.png",
+      "monorepo": "flutter-role-doctor_general-1440-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-nurse-1440-light",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-nurse-1440-light-baseline.png",
+      "monorepo": "flutter-role-nurse-1440-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-admin-1440-light",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-admin-1440-light-baseline.png",
+      "monorepo": "flutter-role-admin-1440-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-operator-1440-light",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-operator-1440-light-baseline.png",
+      "monorepo": "flutter-role-operator-1440-light-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-dark-_login",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-dark-_login-baseline.png",
+      "monorepo": "flutter-1440-dark-_login-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-dark-_register",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-dark-_register-baseline.png",
+      "monorepo": "flutter-1440-dark-_register-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-dark-_password-reset",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-dark-_password-reset-baseline.png",
+      "monorepo": "flutter-1440-dark-_password-reset-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-dark-_register_complete-token",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-dark-_register_complete-token-baseline.png",
+      "monorepo": "flutter-1440-dark-_register_complete-token-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-dark-_password-reset-token",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-dark-_password-reset-token-baseline.png",
+      "monorepo": "flutter-1440-dark-_password-reset-token-monorepo.png"
+    },
+    {
+      "id": "flutter-validation-1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-validation-1440-dark-baseline.png",
+      "monorepo": "flutter-validation-1440-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-patient-1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-patient-1440-dark-baseline.png",
+      "monorepo": "flutter-role-patient-1440-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-doctor_general-1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-doctor_general-1440-dark-baseline.png",
+      "monorepo": "flutter-role-doctor_general-1440-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-nurse-1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-nurse-1440-dark-baseline.png",
+      "monorepo": "flutter-role-nurse-1440-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-admin-1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-admin-1440-dark-baseline.png",
+      "monorepo": "flutter-role-admin-1440-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-operator-1440-dark",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-role-operator-1440-dark-baseline.png",
+      "monorepo": "flutter-role-operator-1440-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-390-light-_login",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-light-_login-baseline.png",
+      "monorepo": "flutter-390-light-_login-monorepo.png"
+    },
+    {
+      "id": "flutter-390-light-_register",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-light-_register-baseline.png",
+      "monorepo": "flutter-390-light-_register-monorepo.png"
+    },
+    {
+      "id": "flutter-390-light-_password-reset",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-light-_password-reset-baseline.png",
+      "monorepo": "flutter-390-light-_password-reset-monorepo.png"
+    },
+    {
+      "id": "flutter-390-light-_register_complete-token",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-light-_register_complete-token-baseline.png",
+      "monorepo": "flutter-390-light-_register_complete-token-monorepo.png"
+    },
+    {
+      "id": "flutter-390-light-_password-reset-token",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-light-_password-reset-token-baseline.png",
+      "monorepo": "flutter-390-light-_password-reset-token-monorepo.png"
+    },
+    {
+      "id": "flutter-validation-390-light",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-validation-390-light-baseline.png",
+      "monorepo": "flutter-validation-390-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-patient-390-light",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-patient-390-light-baseline.png",
+      "monorepo": "flutter-role-patient-390-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-doctor_general-390-light",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-doctor_general-390-light-baseline.png",
+      "monorepo": "flutter-role-doctor_general-390-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-nurse-390-light",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-nurse-390-light-baseline.png",
+      "monorepo": "flutter-role-nurse-390-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-admin-390-light",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-admin-390-light-baseline.png",
+      "monorepo": "flutter-role-admin-390-light-monorepo.png"
+    },
+    {
+      "id": "flutter-role-operator-390-light",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-operator-390-light-baseline.png",
+      "monorepo": "flutter-role-operator-390-light-monorepo.png"
+    },
+    {
+      "id": "flutter-390-dark-_login",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-dark-_login-baseline.png",
+      "monorepo": "flutter-390-dark-_login-monorepo.png"
+    },
+    {
+      "id": "flutter-390-dark-_register",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-dark-_register-baseline.png",
+      "monorepo": "flutter-390-dark-_register-monorepo.png"
+    },
+    {
+      "id": "flutter-390-dark-_password-reset",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-dark-_password-reset-baseline.png",
+      "monorepo": "flutter-390-dark-_password-reset-monorepo.png"
+    },
+    {
+      "id": "flutter-390-dark-_register_complete-token",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-dark-_register_complete-token-baseline.png",
+      "monorepo": "flutter-390-dark-_register_complete-token-monorepo.png"
+    },
+    {
+      "id": "flutter-390-dark-_password-reset-token",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-390-dark-_password-reset-token-baseline.png",
+      "monorepo": "flutter-390-dark-_password-reset-token-monorepo.png"
+    },
+    {
+      "id": "flutter-validation-390-dark",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-validation-390-dark-baseline.png",
+      "monorepo": "flutter-validation-390-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-patient-390-dark",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-patient-390-dark-baseline.png",
+      "monorepo": "flutter-role-patient-390-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-doctor_general-390-dark",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-doctor_general-390-dark-baseline.png",
+      "monorepo": "flutter-role-doctor_general-390-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-nurse-390-dark",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-nurse-390-dark-baseline.png",
+      "monorepo": "flutter-role-nurse-390-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-admin-390-dark",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-admin-390-dark-baseline.png",
+      "monorepo": "flutter-role-admin-390-dark-monorepo.png"
+    },
+    {
+      "id": "flutter-role-operator-390-dark",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "flutter-role-operator-390-dark-baseline.png",
+      "monorepo": "flutter-role-operator-390-dark-monorepo.png"
+    },
+    {
+      "id": "landing-1440-light-en",
+      "width": 1440,
+      "height": 9702,
+      "changedPixels": 0,
+      "totalPixels": 13970880,
+      "baseline": "landing-1440-light-en-baseline.png",
+      "monorepo": "landing-1440-light-en-monorepo.png"
+    },
+    {
+      "id": "landing-1440-dark-es",
+      "width": 1440,
+      "height": 9830,
+      "changedPixels": 0,
+      "totalPixels": 14155200,
+      "baseline": "landing-1440-dark-es-baseline.png",
+      "monorepo": "landing-1440-dark-es-monorepo.png"
+    },
+    {
+      "id": "landing-1440-dark-en",
+      "width": 1440,
+      "height": 9702,
+      "changedPixels": 0,
+      "totalPixels": 13970880,
+      "baseline": "landing-1440-dark-en-baseline.png",
+      "monorepo": "landing-1440-dark-en-monorepo.png"
+    },
+    {
+      "id": "landing-390-light-es",
+      "width": 390,
+      "height": 20525,
+      "changedPixels": 0,
+      "totalPixels": 8004750,
+      "baseline": "landing-390-light-es-baseline.png",
+      "monorepo": "landing-390-light-es-monorepo.png"
+    },
+    {
+      "id": "landing-menu-390-light-es",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "landing-menu-390-light-es-baseline.png",
+      "monorepo": "landing-menu-390-light-es-monorepo.png"
+    },
+    {
+      "id": "landing-390-light-en",
+      "width": 390,
+      "height": 20207,
+      "changedPixels": 0,
+      "totalPixels": 7880730,
+      "baseline": "landing-390-light-en-baseline.png",
+      "monorepo": "landing-390-light-en-monorepo.png"
+    },
+    {
+      "id": "landing-menu-390-light-en",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "landing-menu-390-light-en-baseline.png",
+      "monorepo": "landing-menu-390-light-en-monorepo.png"
+    },
+    {
+      "id": "landing-390-dark-es",
+      "width": 390,
+      "height": 20525,
+      "changedPixels": 0,
+      "totalPixels": 8004750,
+      "baseline": "landing-390-dark-es-baseline.png",
+      "monorepo": "landing-390-dark-es-monorepo.png"
+    },
+    {
+      "id": "landing-menu-390-dark-es",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "landing-menu-390-dark-es-baseline.png",
+      "monorepo": "landing-menu-390-dark-es-monorepo.png"
+    },
+    {
+      "id": "landing-390-dark-en",
+      "width": 390,
+      "height": 20207,
+      "changedPixels": 0,
+      "totalPixels": 7880730,
+      "baseline": "landing-390-dark-en-baseline.png",
+      "monorepo": "landing-390-dark-en-monorepo.png"
+    },
+    {
+      "id": "landing-menu-390-dark-en",
+      "width": 390,
+      "height": 844,
+      "changedPixels": 0,
+      "totalPixels": 329160,
+      "baseline": "landing-menu-390-dark-en-baseline.png",
+      "monorepo": "landing-menu-390-dark-en-monorepo.png"
+    },
+    {
+      "id": "landing-1440-light-es",
+      "width": 1440,
+      "height": 9830,
+      "changedPixels": 0,
+      "totalPixels": 14155200,
+      "baseline": "landing-1440-light-es-baseline.png",
+      "monorepo": "landing-1440-light-es-monorepo.png"
+    },
+    {
+      "id": "flutter-1440-light-_login",
+      "width": 1440,
+      "height": 1000,
+      "changedPixels": 0,
+      "totalPixels": 1440000,
+      "baseline": "flutter-1440-light-_login-baseline.png",
+      "monorepo": "flutter-1440-light-_login-monorepo.png"
+    }
+  ],
+  "failures": [],
+  "mockedApiRequests": 120,
+  "blockedExternalRequests": 0,
+  "browser": "156.0.8078.80",
+  "capture": "Viewport captures for Flutter/menu; scroll-position viewport tiles for long landing pages, exact pixel comparison including antialiasing. Sticky headers are retained in each viewport tile.",
+  "freshLogin": {
+    "success": true,
+    "profile": "new browser context without a pre-created encryption key",
+    "dashboardDataLoaded": true,
+    "decryptionErrors": 0,
+    "screenshot": "fresh-login-monorepo.png"
+  },
+  "authenticatedComparison": "The baseline and monorepo role comparisons use an existing encryption key; the monorepo first-use login is verified separately in a clean context."
+}

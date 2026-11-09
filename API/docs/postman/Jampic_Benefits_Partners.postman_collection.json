@@ -1,0 +1,265 @@
+{
+  "info": {
+    "name": "Doc IA - Beneficios y empresas asociadas",
+    "description": "Flujos funcionales de cierre para beneficios, solicitudes a empresas y estudios diagnósticos. Requiere seleccionar Doc IA Local y cargar tokens e identificadores según el rol indicado.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Beneficios",
+      "item": [
+        {
+          "name": "Consultar beneficios disponibles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{patientAccessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/benefits"
+          }
+        },
+        {
+          "name": "Crear beneficio (administración)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code < 300) pm.environment.set('benefitId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"POSTMAN10\",\n  \"name\": \"Beneficio de prueba\",\n  \"description\": \"Beneficio creado desde la colección funcional\",\n  \"discountPercent\": 10,\n  \"benefitType\": \"discount\",\n  \"maxUsesPerUser\": 1,\n  \"isStackable\": false,\n  \"isActive\": true,\n  \"reason\": \"Prueba funcional de administración\"\n}"
+            },
+            "url": "{{baseUrl}}/benefits"
+          }
+        },
+        {
+          "name": "Asociar beneficio con empresa",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"validationRequired\": true,\n  \"isActive\": true\n}"
+            },
+            "url": "{{baseUrl}}/benefits/{{benefitId}}/partners/{{partnerId}}"
+          }
+        },
+        {
+          "name": "Aplicar beneficio a orden pendiente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{patientAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"benefitId\": \"{{benefitId}}\",\n  \"paymentOrderId\": \"{{paymentOrderId}}\",\n  \"partnerId\": \"{{partnerId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/benefits/apply"
+          }
+        },
+        {
+          "name": "Validar beneficio (empresa)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{partnerAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": "{{baseUrl}}/benefits/validations/{{benefitValidationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Empresas asociadas",
+      "item": [
+        {
+          "name": "Registrar empresa (administración)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code < 300) pm.environment.set('partnerId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laboratorio de prueba\",\n  \"partnerType\": \"laboratory\",\n  \"email\": \"laboratorio@example.com\",\n  \"isActive\": true,\n  \"reason\": \"Prueba funcional de incorporación\"\n}"
+            },
+            "url": "{{baseUrl}}/partners/health-partners"
+          }
+        },
+        {
+          "name": "Asignar usuario a empresa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{partnerUserId}}\",\n  \"partnerRole\": \"operator\",\n  \"isActive\": true\n}"
+            },
+            "url": "{{baseUrl}}/partners/health-partners/{{partnerId}}/users"
+          }
+        },
+        {
+          "name": "Crear solicitud (paciente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code < 300) pm.environment.set('partnerRequestId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{patientAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"partnerId\": \"{{partnerId}}\",\n  \"notes\": \"Solicitud de prueba\",\n  \"items\": [\n    { \"description\": \"Hemograma completo\", \"quantity\": 1 }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/partners/partner-requests"
+          }
+        },
+        {
+          "name": "Confirmar solicitud (paciente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{patientAccessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/partners/partner-requests/{{partnerRequestId}}/confirm"
+          }
+        },
+        {
+          "name": "Responder solicitud (empresa)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{partnerAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\"\n}"
+            },
+            "url": "{{baseUrl}}/partners/partner-requests/{{partnerRequestId}}/respond"
+          }
+        },
+        {
+          "name": "Solicitar estudio (profesional)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code < 300) pm.environment.set('diagnosticOrderId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{professionalAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": \"{{patientId}}\",\n  \"partnerId\": \"{{partnerId}}\",\n  \"orderType\": \"lab\",\n  \"description\": \"Hemograma completo\"\n}"
+            },
+            "url": "{{baseUrl}}/partners/diagnostic-orders"
+          }
+        },
+        {
+          "name": "Cargar resultado (empresa)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{partnerAccessToken}}"
+              },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentType\": \"laboratory_result\",\n  \"fileUrl\": \"{{diagnosticResultUrl}}\",\n  \"fileName\": \"resultado.pdf\",\n  \"mimeType\": \"application/pdf\"\n}"
+            },
+            "url": "{{baseUrl}}/partners/diagnostic-orders/{{diagnosticOrderId}}/result"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "baseline": "Git commits recorded in SOURCE-SNAPSHOT.json; not an inspection of the live VPS",
+  "applications": {
+    "API": {
+      "commit": "c908fb8baa3ec1dc07b0606dcc833c4386da8a3e",
+      "identical": 340,
+      "visualFilesIdentical": 0,
+      "expectedChanges": [
+        "src/app.module.ts",
+        "src/config/configuration.ts",
+        "src/config/env.validation.spec.ts",
+        "src/config/env.validation.ts",
+        "src/main.ts",
+        "src/modules/auth/application/auth.service.ts",
+        "src/modules/payments/application/payments.service.ts"
+      ],
+      "expectedAdditions": [
+        "src/config/public-urls.spec.ts",
+        "src/config/public-urls.ts",
+        "src/modules/payments/application/payments.service.spec.ts"
+      ],
+      "expectedRemovals": [],
+      "unexpected": []
+    },
+    "APP-MVP": {
+      "commit": "c7e3b9c7a75f950501b350469139cf541c4549e6",
+      "identical": 357,
+      "visualFilesIdentical": 168,
+      "expectedChanges": [
+        "lib/core/storage/secure_session_storage.dart",
+        "lib/modules/files/infrastructure/api/api_files_repository.dart"
+      ],
+      "expectedAdditions": [],
+      "expectedRemovals": [],
+      "unexpected": []
+    },
+    "Landing": {
+      "commit": "9a5a404b6d40446c9871dcdf245c484ee6204102",
+      "identical": 70,
+      "visualFilesIdentical": 63,
+      "expectedChanges": [
+        "index.html",
+        "src/config/links.ts",
+        "vite.config.ts"
+      ],
+      "expectedAdditions": [
+        "src/config/environment.ts"
+      ],
+      "expectedRemovals": [
+        "public/downloads/DocIA_V1.0.1.apk"
+      ],
+      "unexpected": []
+    }
+  }
+}

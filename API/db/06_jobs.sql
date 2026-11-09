@@ -1,0 +1,17 @@
+-- ============================================================
+-- JOBS / TAREAS PROGRAMADAS
+-- ============================================================
+-- El programador del entorno debe invocar una vez al día:
+-- POST /api/v1/operations/maintenance/process-daily
+-- con una cuenta técnica protegida que tenga administration.manage,
+-- coins.manage y partners.manage. El proceso consolida vencimientos y avisos
+-- de monedas, suscripciones, beneficios y recetas; recordatorios de consultas
+-- y seguimientos; cierre lógico de sesiones y tokens vencidos; y reintentos de
+-- notificaciones internas. Cada bloque usa transacciones, RLS y auditoría.
+-- Los endpoints específicos de monedas y suscripciones se mantienen para una
+-- recuperación operativa selectiva. No se instala pg_cron para conservar la
+-- compatibilidad con PostgreSQL de Hostinger.
+
+-- ============================================================
+-- FIN JOBS / TAREAS PROGRAMADAS
+-- ============================================================

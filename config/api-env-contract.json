@@ -1,0 +1,270 @@
+{
+  "baselineCommit": "c908fb8baa3ec1dc07b0606dcc833c4386da8a3e",
+  "description": "Original example variable names and example-value digests only; never populated from a real private environment.",
+  "variables": [
+    {
+      "key": "NODE_ENV",
+      "exampleSha256": "875b9380866e9d56e7110b0ee310962c16d9d4ae103f829d62bdffd2cbe7c61d"
+    },
+    {
+      "key": "PORT",
+      "exampleSha256": "a176eeb31e601c3877c87c2843a2f584968975269e369d5c86788b4c2f92d2a2"
+    },
+    {
+      "key": "API_PREFIX",
+      "exampleSha256": "23c74e75b7fa7e2b065e520de0717dacbf92a0f349dd5164209efe9b24392e47"
+    },
+    {
+      "key": "DB_HOST",
+      "exampleSha256": "49960de5880e8c687434170f6476605b8fe4aeb9a28632c7995cf3ba831d9763"
+    },
+    {
+      "key": "DB_PORT",
+      "exampleSha256": "4aeb7ad6d5d37a041c4c5ce6562bf9e3caf05a42d931cef4d9e2a60ca623194d"
+    },
+    {
+      "key": "DB_NAME",
+      "exampleSha256": "d40e8d276939cb06df1fbb80be424e55cd7c6266d86bf12451b282d2e75932f6"
+    },
+    {
+      "key": "DB_USER",
+      "exampleSha256": "86150b7af55e9465ae4c1944a9160d6139fb114779a091032b4da955e3091b51"
+    },
+    {
+      "key": "DB_PASSWORD",
+      "exampleSha256": "62bc72b01e30ed9f9bb809424b8f51f1b1a3bc5316237d4f33924c37654700b4"
+    },
+    {
+      "key": "DB_SSL",
+      "exampleSha256": "e9d8992f348162fd95acf6d07922aff61ebd06a143eaf134f29d72e76cb420ce"
+    },
+    {
+      "key": "DB_ADMIN_DATABASE",
+      "exampleSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5"
+    },
+    {
+      "key": "DB_ADMIN_URL",
+      "exampleSha256": "bd1dfa6091569ea74fd9adbe4014e7c4ac40c9efb7917cd95428623d0f360b13"
+    },
+    {
+      "key": "DATABASE_URL",
+      "exampleSha256": "ec6e1821ed6c98cb493207cff5d113f0a11668ae35be276a662a566ec95b4f60"
+    },
+    {
+      "key": "DB_APPLY_LOCAL_SEEDS",
+      "exampleSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "key": "DB_ENFORCE_RLS_ROLE",
+      "exampleSha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+    },
+    {
+      "key": "JWT_ACCESS_SECRET",
+      "exampleSha256": "9b3cee26e7a0201903435cf9efbab52669f4b9d02f63a3f550162468e8997679"
+    },
+    {
+      "key": "JWT_REFRESH_SECRET",
+      "exampleSha256": "2a8d887bc675b5c4f284452d5f217a264534fc6f1b6a8d110932c192ea0b0607"
+    },
+    {
+      "key": "JWT_ACCESS_EXPIRES_IN",
+      "exampleSha256": "393ba753b34b0410286fd47312f4c9a5f5c75d577fb3750bb78730534c1cbd63"
+    },
+    {
+      "key": "JWT_REFRESH_EXPIRES_IN",
+      "exampleSha256": "a7c742643c7cc56cde61922fb5e8d3548a30b717e8e8b38bc5ec903f2c0be6d2"
+    },
+    {
+      "key": "MFA_ENCRYPTION_KEY",
+      "exampleSha256": "dcb2b2379d6d9f917b285d975c3470ef31042340a9caa2533f69cb24a5f9c0a8"
+    },
+    {
+      "key": "SMS_ENABLED",
+      "exampleSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "key": "SMS_API_URL",
+      "exampleSha256": "5e92a5339eab688bc866ad3bf93ccb51893606a0faf0bea2321aa237c774d8ee"
+    },
+    {
+      "key": "SMS_API_TOKEN",
+      "exampleSha256": "5e21470644c9c614ff097b4a65bce28163220e38a3c14f743eadc957681fa3b1"
+    },
+    {
+      "key": "SMS_SENDER",
+      "exampleSha256": "c3fbe619b4fad89457e515a33edd4b5ded7874b43fb75c3dd8600c5cf07e280c"
+    },
+    {
+      "key": "FCM_ENABLED",
+      "exampleSha256": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+    },
+    {
+      "key": "FCM_PROJECT_ID",
+      "exampleSha256": "1674863bf50f7a140f7123c780817a33ee157b906789654a4f4b6583d41e7862"
+    },
+    {
+      "key": "FCM_CLIENT_EMAIL",
+      "exampleSha256": "8b3d81572f117b321eb1e6fe686c5f7985948753de4581a75e031be6f9163382"
+    },
+    {
+      "key": "FCM_PRIVATE_KEY",
+      "exampleSha256": "a2a48e45d90df56f0de3a9d47700fb5b5dd59d41dd395f6a98340d1aee5070b8"
+    },
+    {
+      "key": "PUBLIC_API_URL",
+      "exampleSha256": "f1de9e489ba88cb15968b97f40f59e8ef0da5ca03ad1f37fc13a2aa45a2512a9"
+    },
+    {
+      "key": "PUBLIC_WEB_URL",
+      "exampleSha256": "4e90ec8f9d9b8d5bd3877ac003797738ff48419fcf8f97821a875ea4671955b6"
+    },
+    {
+      "key": "WEB_ROUTING_MODE",
+      "exampleSha256": "d04b98f48e8f8bcc15c6ae5ac050801cd6dcfd428fb5f9e65c4e16e7807340fa"
+    },
+    {
+      "key": "CORS_ORIGINS",
+      "exampleSha256": "f1de9e489ba88cb15968b97f40f59e8ef0da5ca03ad1f37fc13a2aa45a2512a9"
+    },
+    {
+      "key": "PRESCRIPTION_SIGNING_SECRET",
+      "exampleSha256": "dcb2b2379d6d9f917b285d975c3470ef31042340a9caa2533f69cb24a5f9c0a8"
+    },
+    {
+      "key": "STORAGE_PROVIDER",
+      "exampleSha256": "25bf8e1a2393f1108d37029b3df5593236c755742ec93465bbafa9b290bddcf6"
+    },
+    {
+      "key": "STORAGE_ROOT",
+      "exampleSha256": "49a25f9feefaffecad0fcd30c50dc9331cff8b55ece53def6285c09e17e6f5d7"
+    },
+    {
+      "key": "STORAGE_MAX_FILE_SIZE_MB",
+      "exampleSha256": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5"
+    },
+    {
+      "key": "STORAGE_DAILY_UPLOAD_MB",
+      "exampleSha256": "ad57366865126e55649ecb23ae1d48887544976efea46a48eb5d85a6eeb4d306"
+    },
+    {
+      "key": "STORAGE_SIGNING_SECRET",
+      "exampleSha256": "0c087e79c9d9c9d3053f031852093c9ffe433f3d4387f74bacbc8704c5d64075"
+    },
+    {
+      "key": "STORAGE_SIGNED_URL_EXPIRES_SECONDS",
+      "exampleSha256": "983bd614bb5afece5ab3b6023f71147cd7b6bc2314f9d27af7422541c6558389"
+    },
+    {
+      "key": "GCS_BUCKET_NAME",
+      "exampleSha256": "62db1d9538bf8f2f0e2ac89a14778e525b36af3ac65682d23f6f5adf64a43735"
+    },
+    {
+      "key": "GOOGLE_APPLICATION_CREDENTIALS",
+      "exampleSha256": "fcccf6ecd7f351ba286298266cbb44e2ef0536ecf7d2723e5d5c68c13cf15892"
+    },
+    {
+      "key": "EXTERNAL_HTTP_TIMEOUT_MS",
+      "exampleSha256": "d4c999ae43633bd2036188d2bca68e1be8202b2cc1f3a1c42a728eaff7d2483d"
+    },
+    {
+      "key": "STRIPE_ENABLED",
+      "exampleSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "key": "STRIPE_SECRET_KEY",
+      "exampleSha256": "e7ac8e20438167bea1ecf022d77032a6cd774cd916aeceb25bfe1bf889a54521"
+    },
+    {
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "exampleSha256": "835424e92f15d43caa7adcc4bf60c12b63bc016a159cd2063044c8fe1b8e148f"
+    },
+    {
+      "key": "STRIPE_PAYMENT_RETURN_URL",
+      "exampleSha256": "4bdbda45b8439f4593a945a9f33c3dddb81687245c6601849028f1babfd1fee1"
+    },
+    {
+      "key": "EMAIL_ENABLED",
+      "exampleSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "key": "EMAIL_PROVIDER",
+      "exampleSha256": "6de1be36afd7a16d2e4fb5043e9214d437f65e48eacaaf9f3ab284bc62c0dd06"
+    },
+    {
+      "key": "RESEND_API_KEY",
+      "exampleSha256": "5ec38c4f40874e62da150e2731b6c512559ccaa44d579c32e9e1eb214499e84d"
+    },
+    {
+      "key": "EMAIL_FROM",
+      "exampleSha256": "2774364214c53fe8ef046ef0342b4a82e60e328c9fc203dcdfd1919a9ebc702d"
+    },
+    {
+      "key": "PASSWORD_RESET_URL",
+      "exampleSha256": "b72d8722250aac7b469b4bfc810d216eb69d184843613c559a9bf3aa6819a8d1"
+    },
+    {
+      "key": "REGISTRATION_URL",
+      "exampleSha256": "c4322859f7ce0699628e2e5080ccd28a7e7ca9c6fe085127101419aabeff13cb"
+    },
+    {
+      "key": "AI_ENABLED",
+      "exampleSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "key": "AI_PROVIDER",
+      "exampleSha256": "7d3194f79e645c42e4396dda38be04766810ec6a00d00aced3ffc2a0a1f1a9ef"
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "exampleSha256": "50ec13f8312aeda1a7c268438848a05ebd12aad4a1f8bcb2e2f3b4e5b05dd84e"
+    },
+    {
+      "key": "OPENAI_MODEL",
+      "exampleSha256": "deda3dc02a1d1575f15d5c9f9b3e31cf0c768a55508c31e7ff0f4fc8f33fc669"
+    },
+    {
+      "key": "OPENAI_PROJECT_ID",
+      "exampleSha256": "43362c79e8bc6d0199107108697f28feaef138783b0b7f7fb64deab6ad5fa4ec"
+    },
+    {
+      "key": "OPENAI_ORGANIZATION_ID",
+      "exampleSha256": "52f139c0406c8ede8f59f68141a956843c4abd4f87be8663f0506c79ee6b497b"
+    },
+    {
+      "key": "MAPS_ENABLED",
+      "exampleSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "key": "MAPS_PROVIDER",
+      "exampleSha256": "bbdefa2950f49882f295b1285d4fa9dec45fc4144bfb07ee6acc68762d12c2e3"
+    },
+    {
+      "key": "GOOGLE_MAPS_SERVER_API_KEY",
+      "exampleSha256": "7e98507dd811cbaef225671ec6c989f0f5c0d1af50eeccd1a6913b61f789f5fc"
+    },
+    {
+      "key": "TELEMEDICINE_ENABLED",
+      "exampleSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+    },
+    {
+      "key": "TELEMEDICINE_PROVIDER",
+      "exampleSha256": "ec2ae1497ac7a336b7f01b92e7e60928f439466e6f1a4789c9b6435622301124"
+    },
+    {
+      "key": "GOOGLE_OAUTH_CLIENT_ID",
+      "exampleSha256": "d6743482d2286b0a507abd8bd2623a15847c0bfb059ce95e755cc2b3fcd0d944"
+    },
+    {
+      "key": "GOOGLE_OAUTH_CLIENT_SECRET",
+      "exampleSha256": "08edce3837182aaf43fee3ad06f5b7351a5c1ea3340171112470fde14aa56d7e"
+    },
+    {
+      "key": "GOOGLE_OAUTH_REDIRECT_URI",
+      "exampleSha256": "e80fabbe55061c8648e4c3ea0dc40711b3a119395a2a0a1f11ee6e1fc15f1f1f"
+    },
+    {
+      "key": "GOOGLE_OAUTH_TOKEN_ENCRYPTION_KEY",
+      "exampleSha256": "dcb2b2379d6d9f917b285d975c3470ef31042340a9caa2533f69cb24a5f9c0a8"
+    }
+  ]
+}

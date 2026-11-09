@@ -1,0 +1,17 @@
+[Unit]
+Description=DocIA monorepo isolated PM2
+After=network.target postgresql.service
+
+[Service]
+Type=forking
+User=docia-deploy
+Environment=PATH=/home/docia-deploy/.local/node/bin:/home/docia-deploy/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PM2_HOME=/var/www/docia-monorepo/deploy/pm2
+PIDFile=/var/www/docia-monorepo/deploy/pm2/pm2.pid
+ExecStart=/home/docia-deploy/.local/bin/pm2 resurrect
+ExecReload=/home/docia-deploy/.local/bin/pm2 reload docia-api-monorepo
+ExecStop=/home/docia-deploy/.local/bin/pm2 kill
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

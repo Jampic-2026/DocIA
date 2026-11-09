@@ -1,0 +1,5 @@
+{
+  "APP_ENV": "production",
+  "API_BASE_URL": "https://api.doc-ia.cloud/api/v1/",
+  "STRIPE_PUBLISHABLE_KEY": ""
+}

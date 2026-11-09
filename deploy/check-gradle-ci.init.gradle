@@ -1,0 +1,12 @@
+// Runs inside the actual build JVM, before configuring Android or loading signing properties.
+gradle.settingsEvaluated {
+    def heapMiB = Runtime.getRuntime().maxMemory().intdiv(1024 * 1024)
+    def workers = gradle.startParameter.maxWorkerCount
+    if (heapMiB < 3840) {
+        throw new GradleException("CI Android: heap efectivo ${heapMiB} MiB; se requieren 4096 MiB. Revisar GRADLE_USER_HOME y deploy/gradle-ci.properties.")
+    }
+    if (workers > 2) {
+        throw new GradleException("CI Android: se esperaban como máximo 2 workers, pero hay ${workers}.")
+    }
+    logger.lifecycle("DocIA Android CI: heap máximo ${heapMiB} MiB; workers ${workers}.")
+}

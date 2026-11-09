@@ -1,0 +1,51 @@
+name: jampic
+description: "Doc IA — Clínica digital de servicios de salud para Bolivia."
+publish_to: 'none'
+version: 1.0.1+2
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # Gestión de estado: desacopla UI de la lógica, testeable y escalable.
+  flutter_riverpod: ^2.6.1
+  # Navegación declarativa con redirección condicional por rol.
+  go_router: ^14.6.2
+  # Tipografía (Plus Jakarta Sans) desde Google Fonts.
+  google_fonts: ^6.2.1
+  # Utilidades de UI/UX.
+  intl: ^0.20.2
+  flutter_svg: ^2.0.16
+  dio: ^5.8.0+1
+  flutter_secure_storage: ^9.2.4
+  url_launcher: ^6.3.2
+  geolocator: 14.0.2
+  file_picker: ^10.3.10
+  image_picker: ^1.1.2
+  flutter_stripe: ^13.0.0
+  flutter_stripe_web: ^8.0.0
+  qr_flutter: ^4.1.0
+  firebase_core: ^4.1.0
+  firebase_messaging: ^16.0.1
+  flutter_local_notifications: ^19.4.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+dependency_overrides:
+  firebase_core_web: 3.10.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/

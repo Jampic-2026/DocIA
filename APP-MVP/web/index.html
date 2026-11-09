@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es-BO">
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Doc IA, clínica digital de servicios de salud para Bolivia.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Doc IA">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="preload" as="image" href="white_logo.png">
+
+  <title>Doc IA</title>
+  <link rel="manifest" href="manifest.json">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #006B9A;
+    }
+
+    #docia-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #006B9A 0%, #009FE3 100%);
+      color: #FFFFFF;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      transition: opacity 220ms ease, visibility 220ms ease;
+    }
+
+    #docia-splash.docia-splash-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .docia-splash-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .docia-splash-logo {
+      width: auto;
+      height: 64px;
+      object-fit: contain;
+      image-rendering: auto;
+    }
+
+    .docia-splash-tagline {
+      margin-top: 28px;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="docia-splash" aria-label="Cargando Doc IA">
+    <div class="docia-splash-content">
+      <img class="docia-splash-logo" src="white_logo.png" alt="Doc IA">
+      <div class="docia-splash-tagline">Tu salud, conectada</div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var splash = document.getElementById('docia-splash');
+      if (!splash) {
+        return;
+      }
+
+      splash.classList.add('docia-splash-hidden');
+      window.setTimeout(function () {
+        splash.remove();
+      }, 260);
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

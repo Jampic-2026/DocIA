@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/png" href="/icon.png" />
+
+    <title>Doc IA | Salud Digital</title>
+
+    <meta
+      name="description"
+      content="Doc IA es una plataforma de salud digital que integra inteligencia artificial, telemedicina y servicios médicos para facilitar el acceso a la atención en salud."
+    />
+
+    <meta property="og:title" content="Doc IA | Salud Digital" />
+    <meta
+      property="og:description"
+      content="Inteligencia artificial, telemedicina y servicios médicos conectados en una plataforma de salud digital."
+    />
+    <meta property="og:image" content="%DOCIA_SITE_URL%/logo.png" />
+    <meta property="og:url" content="%DOCIA_SITE_URL%/" />
+    <link rel="canonical" href="%DOCIA_SITE_URL%/" />
+    <meta property="og:type" content="website" />
+    
+    <script>
+      try {
+        const theme = window.localStorage.getItem('doc-ia-theme');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          document.documentElement.dataset.theme = 'dark';
+        } else {
+          document.documentElement.dataset.theme = 'light';
+        }
+      } catch {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
