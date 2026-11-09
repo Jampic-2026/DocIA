@@ -7,7 +7,7 @@ test("API only changes upstream port and keeps TLS and routes", () =>
       "location / { proxy_pass http://127.0.0.1:3000/api/; } ssl_certificate /old.pem;",
       "api",
     ),
-    "location / { proxy_pass http://127.0.0.1:3100/api/; } ssl_certificate /old.pem;",
+    "location / { proxy_pass http://127.0.0.1:3200/api/; } ssl_certificate /old.pem;",
   ));
 test("web supports legacy checkout and release paths", () => {
   for (const from of [

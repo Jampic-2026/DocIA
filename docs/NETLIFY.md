@@ -81,6 +81,8 @@ El push verifica el proyecto; Android y despliegue se omiten mientras `DOCIA_DEP
 
 ## 3. Preparar el VPS en paralelo
 
+La API nueva usa `127.0.0.1:3200`. El puerto 3100 pertenece a Stentor (`/opt/stentor/api`) y no se debe detener ese servicio. Antes de instalar, comprobar que 3200, 8088 y 8089 estén libres. El instalador vuelve a comprobarlos y aborta si alguno está ocupado; no libera puertos ni detiene otros proyectos.
+
 Las claves privadas se conservan en `/root/.ssh` y `/root/docia-actions-keys`, independientemente de la carpeta actual de la terminal. El código nuevo se instala en `/var/www/docia/monorepo/repository`; sus releases y entorno privado quedan en `/var/www/docia/monorepo/deploy`. Las carpetas existentes `api`, `web`, `landing`, `deploy` y `secrets` se conservan.
 
 Como administrador, con el usuario `docia-deploy`, Node 22 aislado y las herramientas del despliegue actual disponibles. No actualizar paquetes globales. La clave de lectura `/root/.ssh/docia-monorepo-github` debe estar registrada en **Laura-Nu/DocIA → Settings → Deploy keys**, sin permiso de escritura. Es distinta de la clave usada por Actions para entrar al VPS.
@@ -181,7 +183,7 @@ test -s /var/www/docia/monorepo/deploy/pm2/dump.pm2
 sudo -u docia-deploy env PATH=/home/docia-deploy/.local/node/bin:/home/docia-deploy/.local/bin:/usr/bin:/bin PM2_HOME=/var/www/docia/monorepo/deploy/pm2 /home/docia-deploy/.local/bin/pm2 kill
 systemctl enable --now docia-monorepo-pm2.service
 systemctl status docia-monorepo-pm2.service --no-pager
-curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:3100/api/v1/health/ready
+curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:3200/api/v1/health/ready
 BASH
 ```
 

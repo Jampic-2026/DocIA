@@ -16,7 +16,7 @@ module.exports = {
       env: {
         NODE_ENV: "production",
         HOST: "127.0.0.1",
-        PORT: "3100",
+        PORT: "3200",
         // Optional common public config; credentials remain exclusively in api/.env.
         DOCIA_SITES_FILE: path.join(__dirname, "PUBLIC_CONFIG.env"),
         DOCIA_RELEASE: path.basename(__dirname),

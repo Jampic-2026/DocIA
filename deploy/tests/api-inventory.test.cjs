@@ -30,7 +30,7 @@ test("all original example variables and all runtime schema variables have a des
   );
   assert.equal(
     report.variables.find((v) => v.key === "PORT").effectiveValue,
-    "3100",
+    "3200",
   );
 });
 test("commented explanations do not hide the active example assignment", () =>

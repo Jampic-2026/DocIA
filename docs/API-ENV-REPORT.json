@@ -23,7 +23,7 @@
       "optional": false,
       "destination": "deploy/ecosystem.config.cjs → process environment",
       "classification": "deployment",
-      "effectiveValue": "3100",
+      "effectiveValue": "3200",
       "note": "La copia privada conserva el valor anterior, pero este ajuste de la instalación nueva tiene prioridad."
     },
     {

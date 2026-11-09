@@ -20,8 +20,11 @@ id docia-deploy >/dev/null
 for file in /etc/nginx/conf.d/docia-monorepo-preview.conf /etc/systemd/system/docia-monorepo-pm2.service; do
   [[ ! -e "$file" && ! -L "$file" ]] || { echo 'A monorepo configuration file already exists; inspect it before continuing.'; exit 1; }
 done
-for port in 3100 8088 8089; do
-  if ss -H -ltn "sport = :$port" | grep -q .; then echo "Port $port is already in use; aborting."; exit 1; fi
+for port in 3200 8088 8089; do
+  if ss -H -ltn "sport = :$port" | grep -q .; then
+    echo "Puerto $port ocupado; instalación detenida sin detener procesos. Identificar con: ss -ltnp 'sport = :$port'"
+    exit 1
+  fi
 done
 for file in api.env migrations.env; do [[ -f "$LEGACY/shared/$file" && ! -L "$LEGACY/shared/$file" ]] || exit 1; done
 [[ -d "$LEGACY/shared/storage" ]] || { echo 'Legacy storage is missing.'; exit 1; }

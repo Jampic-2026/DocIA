@@ -44,7 +44,7 @@ describe("isolated deployment environment", () => {
     const pm2Values = {
       NODE_ENV: "production",
       HOST: "127.0.0.1",
-      PORT: "3100",
+      PORT: "3200",
       STORAGE_ROOT: "/var/www/docia/monorepo/deploy/shared/storage",
     };
     const keys = new Set([
@@ -85,7 +85,7 @@ describe("isolated deployment environment", () => {
         ],
       }).compile();
       const config = module.get(ConfigService);
-      expect(config.get("PORT")).toBe(3100);
+      expect(config.get("PORT")).toBe(3200);
       expect(config.get("HOST")).toBe("127.0.0.1");
       expect(config.get("STORAGE_ROOT")).toBe(pm2Values.STORAGE_ROOT);
       expect(config.get("JWT_ACCESS_SECRET")).toBe(

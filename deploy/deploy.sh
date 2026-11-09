@@ -148,7 +148,7 @@ load_public() {
     count=$((count + 1))
   done < "$file"
   (( count == 4 )) || fail 'Incomplete public configuration.'
-  API_READY_URL="http://127.0.0.1:3100/$API_PREFIX/health/ready"
+  API_READY_URL="http://127.0.0.1:3200/$API_PREFIX/health/ready"
   PUBLIC_API_READY_URL="$PUBLIC_API_URL/$API_PREFIX/health/ready"
   WEB_BASE_URL=$PUBLIC_WEB_URL
   LANDING_BASE_URL=$PUBLIC_LANDING_URL

@@ -3,7 +3,7 @@ const fs = require("node:fs");
 const { execFileSync } = require("node:child_process");
 const { createHash } = require("node:crypto");
 const { parseEnv } = require("./public-config.cjs");
-const { root } = require("./layout.cjs");
+const { root, apiPort } = require("./layout.cjs");
 const get = (url) =>
   execFileSync(
     "curl",
@@ -26,7 +26,10 @@ async function main() {
         "Los tres componentes requieren la misma configuración pública.",
       );
     if (component === "api") {
-      for (const origin of [`http://127.0.0.1:3100`, conf.PUBLIC_API_URL]) {
+      for (const origin of [
+        `http://127.0.0.1:${apiPort}`,
+        conf.PUBLIC_API_URL,
+      ]) {
         const body = JSON.parse(
           get(`${origin}/${conf.API_PREFIX}/health/ready`),
         );

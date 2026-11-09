@@ -22,7 +22,7 @@ Verificaciones locales realizadas el 9 de noviembre de 2026, sobre esta carpeta 
 
 Las pruebas de despliegue usan procesos npm/PM2 y respuestas HTTP simulados; no se conectan al VPS ni ejecutan SQL. En Linux CI se añade una comprobación con `flock` real. La prueba Nginx valida sintaxis y combina las plantillas; sustituye únicamente certificados y rutas de opciones Certbot por archivos de prueba, sin arrancar un servidor.
 
-La API se prepara en 3100; los virtual hosts existentes se revisan y prueban en el VPS durante el cambio. La firma y el contenido de la APK nueva se verificarán con el keystore real y Android Build Tools en GitHub Actions. No se ejecutó una compilación Android firmada local ni se publicaron cambios en GitHub o el VPS desde esta preparación.
+La API se prepara en 3200; los virtual hosts existentes se revisan y prueban en el VPS durante el cambio. La firma y el contenido de la APK nueva se verificarán con el keystore real y Android Build Tools en GitHub Actions. No se ejecutó una compilación Android firmada local ni se publicaron cambios en GitHub o el VPS desde esta preparación.
 
 Todavía corresponden las comprobaciones del servidor y las pruebas funcionales con una cuenta de prueba descritas en [NETLIFY.md](NETLIFY.md). Tampoco se aplicaron migraciones de base de datos. Un resultado correcto de compilación o salud no demuestra por sí solo cada integración externa.
 

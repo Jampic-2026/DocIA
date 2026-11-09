@@ -74,7 +74,7 @@ test("API-only renderer never creates Netlify virtual hosts and serves APK from 
     false,
   );
   const nginx = fs.readFileSync(path.join(directory, "docia-api.conf"), "utf8");
-  assert.match(nginx, /proxy_pass http:\/\/127.0.0.1:3100;/);
+  assert.match(nginx, /proxy_pass http:\/\/127.0.0.1:3200;/);
   assert.match(
     nginx,
     /alias \/var\/www\/docia\/monorepo\/deploy\/current-web\/web\/downloads\/DocIA.apk;/,

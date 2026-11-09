@@ -3,7 +3,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { parseEnv } = require("./public-config.cjs");
-const { root } = require("./layout.cjs");
+const { root, apiPort } = require("./layout.cjs");
 const run = (file, args = []) => execFileSync(file, args, { stdio: "inherit" });
 function transform(text, component) {
   if (component === "api") {
@@ -11,7 +11,7 @@ function transform(text, component) {
       throw Error("No se encontró el upstream esperado de la API en 3000.");
     return text.replace(
       /(proxy_pass\s+http:\/\/(?:127\.0\.0\.1|localhost):)3000\b/g,
-      "$13100",
+      (_match, prefix) => `${prefix}${apiPort}`,
     );
   }
   const directory = component === "web" ? "web" : "landing";

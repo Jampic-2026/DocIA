@@ -100,12 +100,12 @@ En GitHub, **Settings → Secrets and variables → Actions → Variables**, cre
 
 Los jobs verifican las tres aplicaciones y firman Android con el certificado original. `config/android-version.json` establece una base `200000` y se suma el número de ejecución del workflow para superar los versionCode del repositorio anterior; el instalador verifica que la base sea mayor al APK que está publicado. Si fuera necesario aumentarla, editar y subir el archivo antes del primer despliegue. No crear otra clave de firma ni reducir esa base.
 
-El job `deploy` publica API → web con APK → landing. La API nueva se llama `docia-api-monorepo`, usa `PM2_HOME=/var/www/docia/monorepo/deploy/pm2` y escucha en 3100. La anterior mantiene su PM2 y puerto 3000. No requiere instalar Flutter en el VPS.
+El job `deploy` publica API → web con APK → landing. La API nueva se llama `docia-api-monorepo`, usa `PM2_HOME=/var/www/docia/monorepo/deploy/pm2` y escucha en 3200. La anterior mantiene su PM2 y puerto 3000. No requiere instalar Flutter en el VPS.
 
 Comprobar en el VPS, con un comando por línea:
 
 ```bash
-curl --fail --silent --show-error http://127.0.0.1:3100/api/v1/health/ready
+curl --fail --silent --show-error http://127.0.0.1:3200/api/v1/health/ready
 curl --fail --silent --show-error http://127.0.0.1:8088/docia-release.txt
 curl --fail --silent --show-error http://127.0.0.1:8089/docia-release.txt
 curl --fail --silent --show-error http://127.0.0.1:8089/downloads/DocIA.apk.sha256
@@ -120,7 +120,7 @@ test -s /var/www/docia/monorepo/deploy/pm2/dump.pm2
 sudo -u docia-deploy env PATH=/home/docia-deploy/.local/node/bin:/home/docia-deploy/.local/bin:/usr/bin:/bin PM2_HOME=/var/www/docia/monorepo/deploy/pm2 /home/docia-deploy/.local/bin/pm2 kill
 systemctl enable --now docia-monorepo-pm2.service
 systemctl status docia-monorepo-pm2.service --no-pager
-curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:3100/api/v1/health/ready
+curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:3200/api/v1/health/ready
 ```
 
 Nunca ejecutar `pm2 kill`, `delete all`, `restart all` ni `pm2 save` sin especificar ese `PM2_HOME` cuando se administra esta instalación. El servicio antiguo `docia-pm2.service` y otros proyectos del servidor no se tocan.
@@ -158,7 +158,7 @@ flock --wait 900 /var/www/docia/monorepo/deploy/deploy.lock \
   /etc/nginx/sites-enabled/doc-ia.cloud.conf
 ```
 
-El cambio apunta la API a 3100 y los sitios y el APK a las releases nuevas. Ejecuta `nginx -t`, recarga y comprueba API, marcadores, recursos HTML/JS/CSS y el APK descargable por HTTPS. Si falla, restaura los archivos anteriores y recarga. Al pasar, imprime `CAMBIO_OK` y la carpeta privada del respaldo, y activa `PUBLIC_CHECKS=1` para los despliegues siguientes.
+El cambio apunta la API a 3200 y los sitios y el APK a las releases nuevas. Ejecuta `nginx -t`, recarga y comprueba API, marcadores, recursos HTML/JS/CSS y el APK descargable por HTTPS. Si falla, restaura los archivos anteriores y recarga. Al pasar, imprime `CAMBIO_OK` y la carpeta privada del respaldo, y activa `PUBLIC_CHECKS=1` para los despliegues siguientes.
 
 No es necesario bajar los sitios antiguos para usar los mismos dominios: Nginx cambia los destinos con una recarga. La API anterior puede quedar encendida para la recuperación. Ambas instancias comparten la base; las colas existentes usan bloqueos SQL para reclamar trabajos. Conviene retirar el proceso anterior cuando se confirme la nueva instalación; no usar este período para probar operaciones reales de pacientes sin coordinación.
 

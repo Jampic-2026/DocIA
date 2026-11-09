@@ -57,7 +57,7 @@ fixture() {
   touch "$TEST_ROOT/shared/api.env" "$TEST_ROOT/shared/migrations.env"
   cat > "$TEST_ROOT/shared/server.conf" <<EOF
 export PATH="$TEST_ROOT/mocks:$PATH"
-API_READY_URL=http://127.0.0.1:3100/api/v1/health/ready
+API_READY_URL=http://127.0.0.1:3200/api/v1/health/ready
 PUBLIC_CHECKS=1
 PUBLIC_API_READY_URL=https://api.example.com/api/v1/health/ready
 WEB_BASE_URL=https://app.example.com
