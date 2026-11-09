@@ -2,11 +2,11 @@
 
 Este es el esquema del workflow actual. La landing y Flutter web se publican en dos proyectos Netlify. API, PostgreSQL, almacenamiento y APK firmado continúan en el VPS, en `/var/www/docia-monorepo`. Los sitios `.cloud` anteriores siguen funcionando.
 
-Los nombres siguientes son ejemplos: **no se registraron ni se comprobó su disponibilidad**.
+El nombre de API confirmado es `api-docia.duckdns.org`. Los nombres Netlify siguientes son ejemplos: **todavía deben crearse y comprobar su disponibilidad**.
 
 | Componente  | Ejemplo                 |
 | ----------- | ----------------------- |
-| API         | `docia-api.duckdns.org` |
+| API         | `api-docia.duckdns.org` |
 | Flutter web | `docia-app.netlify.app` |
 | Landing     | `docia.netlify.app`     |
 
@@ -23,14 +23,14 @@ New-Item -ItemType Directory -Force ".validation/netlify-initial" | Out-Null
 '<!doctype html><html lang="es"><meta charset="utf-8"><title>DocIA</title><p>Publicación pendiente.</p></html>' | Set-Content -Encoding ascii ".validation/netlify-initial/index.html"
 ```
 
-Cargar esa carpeta mediante Deploy manually en ambos proyectos y comprobar sus URL HTTPS. No habilitar contraseña, snippets, minificación ni otras transformaciones del sitio: se verifican los bytes del build. La página temporal se reemplaza al publicar la aplicación real.
+Cargar esa carpeta mediante Deploy manually en ambos proyectos, establecer su visibilidad pública y comprobar sus URL HTTPS desde una ventana privada. Algunos proyectos pueden crearse privados por defecto. No habilitar contraseña, snippets, minificación ni otras transformaciones del sitio: se verifican los bytes del build. La página temporal se reemplaza al publicar la aplicación real.
 
 ## 2. Configuración central y GitHub
 
 Editar `config/environments/production.env` con los tres nombres reales:
 
 ```dotenv
-PUBLIC_API_URL=https://docia-api.duckdns.org
+PUBLIC_API_URL=https://api-docia.duckdns.org
 PUBLIC_WEB_URL=https://docia-app.netlify.app
 PUBLIC_LANDING_URL=https://docia.netlify.app
 API_PREFIX=api/v1
@@ -90,7 +90,7 @@ id docia-deploy
 /home/docia-deploy/.local/node/bin/node --version
 command -v git curl tar sha256sum flock nginx ss certbot
 install -d -m 755 /var/www/docia-monorepo
-git clone git@github-jampic:Jampic-2026/DocIA.git /var/www/docia-monorepo/repository
+git clone git@github-jampic:Laura-Nu/DocIA.git /var/www/docia-monorepo/repository
 cd /var/www/docia-monorepo/repository
 bash deploy/setup-server.sh --netlify
 BASH
@@ -118,7 +118,7 @@ install -d -m 755 /var/www/docia-monorepo/deploy/acme /var/www/docia-monorepo/de
 install -m 644 deploy/generated/netlify/docia-http-bootstrap.conf "$site"
 if ! nginx -t; then rm -f -- "$site"; exit 1; fi
 if ! systemctl reload nginx; then rm -f -- "$site"; nginx -t && systemctl reload nginx; exit 1; fi
-certbot certonly --webroot -w /var/www/docia-monorepo/deploy/acme -d "$api_host"
+certbot certonly --webroot -w /var/www/docia-monorepo/deploy/acme -d "$api_host" --deploy-hook 'nginx -t && systemctl reload nginx'
 install -m 644 deploy/generated/netlify/docia-api.conf "$site"
 if ! nginx -t; then install -m 644 deploy/generated/netlify/docia-http-bootstrap.conf "$site"; nginx -t; exit 1; fi
 if ! systemctl reload nginx; then install -m 644 deploy/generated/netlify/docia-http-bootstrap.conf "$site"; nginx -t && systemctl reload nginx; exit 1; fi
@@ -145,8 +145,8 @@ Cada publicación Netlify comprueba un borrador antes de activarlo y verifica de
 Comprobar con las direcciones reales:
 
 ```bash
-curl --fail --silent --show-error https://docia-api.duckdns.org/api/v1/health/ready
-curl --fail --silent --show-error https://docia-api.duckdns.org/downloads/android-release.json
+curl --fail --silent --show-error https://api-docia.duckdns.org/api/v1/health/ready
+curl --fail --silent --show-error https://api-docia.duckdns.org/downloads/android-release.json
 curl --fail --silent --show-error https://docia-app.netlify.app/docia-release.txt
 curl --fail --silent --show-error https://docia.netlify.app/docia-release.txt
 curl --fail --silent --show-error --head https://docia.netlify.app/downloads/DocIA.apk
