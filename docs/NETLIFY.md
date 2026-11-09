@@ -2,13 +2,13 @@
 
 Este es el esquema del workflow actual. La landing y Flutter web se publican en dos proyectos Netlify. API, PostgreSQL, almacenamiento y APK firmado continúan en el VPS, en `/var/www/docia/monorepo`. Los sitios `.cloud` anteriores siguen funcionando.
 
-El nombre de API confirmado es `api-docia.duckdns.org`. Los nombres Netlify siguientes son ejemplos: **todavía deben crearse y comprobar su disponibilidad**.
+El nombre de API confirmado es `api-docia.duckdns.org`. Los proyectos Netlify seleccionados son `app-docia` para Flutter web y `doc-ia` para la landing. Antes del primer despliegue, comprobar que sus URL HTTPS principales coincidan con esta configuración.
 
-| Componente  | Ejemplo                 |
+| Componente  | Dirección               |
 | ----------- | ----------------------- |
 | API         | `api-docia.duckdns.org` |
-| Flutter web | `docia-app.netlify.app` |
-| Landing     | `docia.netlify.app`     |
+| Flutter web | `app-docia.netlify.app` |
+| Landing     | `doc-ia.netlify.app`    |
 
 ## 1. Crear las direcciones
 
@@ -31,12 +31,12 @@ Editar `config/environments/production.env` con los tres nombres reales:
 
 ```dotenv
 PUBLIC_API_URL=https://api-docia.duckdns.org
-PUBLIC_WEB_URL=https://docia-app.netlify.app
-PUBLIC_LANDING_URL=https://docia.netlify.app
+PUBLIC_WEB_URL=https://app-docia.netlify.app
+PUBLIC_LANDING_URL=https://doc-ia.netlify.app
 API_PREFIX=api/v1
 ```
 
-El archivo todavía conserva los `.cloud` hasta que se creen las direcciones reales. No activar el deploy con nombres de ejemplo. Los builds, enlaces de correo, pagos, callback Google y CORS usan esta fuente pública. `legacy-cloud.env` describe únicamente la instalación anterior para validar su copia privada durante la migración; no se edita para cambios futuros de la instalación nueva.
+El archivo contiene las direcciones de DuckDNS y de los proyectos Netlify seleccionados. Si se cambia el nombre o dominio principal de un proyecto, actualizar esta fuente antes de desplegar. Los builds, enlaces de correo, pagos, callback Google y CORS usan esta fuente pública. `legacy-cloud.env` describe únicamente la instalación anterior para validar su copia privada durante la migración; no se edita para cambios futuros de la instalación nueva.
 
 En GitHub, crear el environment **`production`** y cargar estos diez secrets:
 
@@ -168,9 +168,9 @@ Comprobar con las direcciones reales:
 ```bash
 curl --fail --silent --show-error https://api-docia.duckdns.org/api/v1/health/ready
 curl --fail --silent --show-error https://api-docia.duckdns.org/downloads/android-release.json
-curl --fail --silent --show-error https://docia-app.netlify.app/docia-release.txt
-curl --fail --silent --show-error https://docia.netlify.app/docia-release.txt
-curl --fail --silent --show-error --head https://docia.netlify.app/downloads/DocIA.apk
+curl --fail --silent --show-error https://app-docia.netlify.app/docia-release.txt
+curl --fail --silent --show-error https://doc-ia.netlify.app/docia-release.txt
+curl --fail --silent --show-error --head https://doc-ia.netlify.app/downloads/DocIA.apk
 ```
 
 La última URL redirige al APK en DuckDNS. El deploy del VPS comprueba también el SHA-256 del APK descargado. Netlify no almacena ni transfiere ese binario.
