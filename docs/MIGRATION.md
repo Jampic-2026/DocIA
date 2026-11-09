@@ -64,10 +64,10 @@ Se requiere Node 22, que ya utiliza el despliegue actual. El instalador reutiliz
 Clonar el repositorio nuevo utilizando el acceso GitHub del administrador. Autorizar esa clave de lectura también para el repositorio nuevo en GitHub si fuera necesario; la clave utilizada para entrar al VPS desde Actions es un acceso diferente. El ejemplo usa el alias SSH existente `github-jampic`; si no tiene acceso al repositorio nuevo, ajustarlo antes de continuar:
 
 ```bash
-test ! -e /var/www/docia-monorepo
-install -d -m 755 /var/www/docia-monorepo
-git clone git@github-jampic:Jampic-2026/DocIA.git /var/www/docia-monorepo/repository
-cd /var/www/docia-monorepo/repository
+test ! -e /var/www/docia/monorepo
+install -d -m 755 /var/www/docia/monorepo
+git clone git@github-jampic:Jampic-2026/DocIA.git /var/www/docia/monorepo/repository
+cd /var/www/docia/monorepo/repository
 bash deploy/setup-server.sh
 ```
 
@@ -77,13 +77,13 @@ El instalador comprueba primero que las rutas existentes de correo, pagos y OAut
 
 El instalador:
 
-- Crea solamente `/var/www/docia-monorepo/deploy` y el archivo nuevo `/etc/nginx/conf.d/docia-monorepo-preview.conf`.
+- Crea solamente `/var/www/docia/monorepo/deploy` y el archivo nuevo `/etc/nginx/conf.d/docia-monorepo-preview.conf`.
 - Copia en privado `api.env` y `migrations.env` desde `/var/www/docia/deploy/shared`, sin imprimirlos. En la copia de API retira las URL derivadas antiguas para que se calculen desde la configuración central. Conserva contraseñas, JWT, cifrado, integraciones, opciones de enrutamiento y orígenes adicionales CORS.
 - Enlaza el almacenamiento al directorio original. Los archivos y la base de datos siguen siendo los mismos; no borrar la instalación anterior mientras se use ese enlace. Las rutas de credenciales a `/var/www/docia/secrets` siguen funcionando.
 - Prepara las vistas previas de Nginx solo en `127.0.0.1:8088` y `8089`, valida y recarga su configuración. No cambia los virtual hosts públicos.
 - Instala el archivo del servicio nuevo, sin iniciar o detener el servicio anterior.
 
-Revisar de forma privada `/var/www/docia-monorepo/deploy/shared/api.env` y `migrations.env` si la instalación anterior tenía URL de callback o rutas especiales distintas de las habituales del proyecto. El callback Google estándar es `https://api.doc-ia.cloud/api/v1/integrations/google/callback`; los enlaces Flutter se derivan con el modo de rutas configurado. Las credenciales PostgreSQL actuales se conservan: runtime con su rol restringido y migraciones con el rol administrativo existente. Una contraseña con `#` se cita correctamente en dotenv; no reemplazarla por un ejemplo.
+Revisar de forma privada `/var/www/docia/monorepo/deploy/shared/api.env` y `migrations.env` si la instalación anterior tenía URL de callback o rutas especiales distintas de las habituales del proyecto. El callback Google estándar es `https://api.doc-ia.cloud/api/v1/integrations/google/callback`; los enlaces Flutter se derivan con el modo de rutas configurado. Las credenciales PostgreSQL actuales se conservan: runtime con su rol restringido y migraciones con el rol administrativo existente. Una contraseña con `#` se cita correctamente en dotenv; no reemplazarla por un ejemplo.
 
 El archivo nuevo `shared/server.conf` comienza con:
 
@@ -100,7 +100,7 @@ En GitHub, **Settings → Secrets and variables → Actions → Variables**, cre
 
 Los jobs verifican las tres aplicaciones y firman Android con el certificado original. `config/android-version.json` establece una base `200000` y se suma el número de ejecución del workflow para superar los versionCode del repositorio anterior; el instalador verifica que la base sea mayor al APK que está publicado. Si fuera necesario aumentarla, editar y subir el archivo antes del primer despliegue. No crear otra clave de firma ni reducir esa base.
 
-El job `deploy` publica API → web con APK → landing. La API nueva se llama `docia-api-monorepo`, usa `PM2_HOME=/var/www/docia-monorepo/deploy/pm2` y escucha en 3100. La anterior mantiene su PM2 y puerto 3000. No requiere instalar Flutter en el VPS.
+El job `deploy` publica API → web con APK → landing. La API nueva se llama `docia-api-monorepo`, usa `PM2_HOME=/var/www/docia/monorepo/deploy/pm2` y escucha en 3100. La anterior mantiene su PM2 y puerto 3000. No requiere instalar Flutter en el VPS.
 
 Comprobar en el VPS, con un comando por línea:
 
@@ -116,8 +116,8 @@ Los marcadores deben corresponder al SHA y ejecución nuevos. Los dominios públ
 Configurar el arranque del PM2 nuevo **antes del cambio público**, después de que el primer despliegue guardó su lista. Estos comandos solo detienen brevemente la API nueva de prueba:
 
 ```bash
-test -s /var/www/docia-monorepo/deploy/pm2/dump.pm2
-sudo -u docia-deploy env PATH=/home/docia-deploy/.local/node/bin:/home/docia-deploy/.local/bin:/usr/bin:/bin PM2_HOME=/var/www/docia-monorepo/deploy/pm2 /home/docia-deploy/.local/bin/pm2 kill
+test -s /var/www/docia/monorepo/deploy/pm2/dump.pm2
+sudo -u docia-deploy env PATH=/home/docia-deploy/.local/node/bin:/home/docia-deploy/.local/bin:/usr/bin:/bin PM2_HOME=/var/www/docia/monorepo/deploy/pm2 /home/docia-deploy/.local/bin/pm2 kill
 systemctl enable --now docia-monorepo-pm2.service
 systemctl status docia-monorepo-pm2.service --no-pager
 curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:3100/api/v1/health/ready
@@ -149,9 +149,9 @@ ls -l /etc/nginx/sites-enabled/app.doc-ia.cloud.conf /etc/nginx/sites-enabled/do
 Revisar el archivo devuelto para API y confirmar que es un virtual host exclusivo de DocIA. En el siguiente comando, reemplazar **solo el primer argumento de archivo** si el nombre de API difiere. Se requieren tres archivos separados. El script aborta ante rutas, upstreams o nombres de dominio inesperados, conserva certificados y demás directivas y respalda los tres archivos reales fuera de `sites-enabled`:
 
 ```bash
-cd /var/www/docia-monorepo/repository
+cd /var/www/docia/monorepo/repository
 git pull --ff-only origin main
-flock --wait 900 /var/www/docia-monorepo/deploy/deploy.lock \
+flock --wait 900 /var/www/docia/monorepo/deploy/deploy.lock \
   /home/docia-deploy/.local/node/bin/node deploy/cutover.cjs activate \
   /etc/nginx/sites-enabled/api.doc-ia.cloud.conf \
   /etc/nginx/sites-enabled/app.doc-ia.cloud.conf \
@@ -166,10 +166,10 @@ Probar desde navegador: inicio de sesión, recuperación de contraseña, subida/
 
 ## 6. Activar las migraciones para pushes futuros
 
-Cuando la nueva instalación atienda correctamente y se haya comprobado el respaldo, editar **solo** `/var/www/docia-monorepo/deploy/shared/server.conf`:
+Cuando la nueva instalación atienda correctamente y se haya comprobado el respaldo, editar **solo** `/var/www/docia/monorepo/deploy/shared/server.conf`:
 
 ```bash
-nano /var/www/docia-monorepo/deploy/shared/server.conf
+nano /var/www/docia/monorepo/deploy/shared/server.conf
 ```
 
 Cambiar `RUN_MIGRATIONS=0` por `RUN_MIGRATIONS=1`; conservar `PUBLIC_CHECKS=1`. Guardar. Desde ese momento, cada push a main verificará, compilará, aplicará migraciones incrementales y desplegará. Los cambios de esquema deben seguir siendo compatibles con la versión anterior durante el cambio: una recuperación de código no deshace SQL.
@@ -183,8 +183,8 @@ Si falla un componente en Actions, el script informa etapa, código y ruta del l
 Para recuperar una release del monorepo, listar identificadores y ejecutar con el usuario aislado; reemplazar `ID_ANTERIOR` por el segmento `SHA-RUN-ATTEMPT` real de esa release:
 
 ```bash
-ls -1 /var/www/docia-monorepo/deploy/releases
-sudo -u docia-deploy bash /var/www/docia-monorepo/repository/deploy/deploy.sh --rollback api ID_ANTERIOR
+ls -1 /var/www/docia/monorepo/deploy/releases
+sudo -u docia-deploy bash /var/www/docia/monorepo/repository/deploy/deploy.sh --rollback api ID_ANTERIOR
 ```
 
 Para web o landing cambiar el componente. El script vuelve a comprobar salud y conserva su configuración pública por release. No elimina releases automáticamente; vigilar espacio y conservar al menos la actual y la anterior.
@@ -192,8 +192,8 @@ Para web o landing cambiar el componente. El script vuelve a comprobar salud y c
 Para volver a toda la instalación original, primero poner `DOCIA_DEPLOY_ENABLED=false` en el repositorio nuevo y esperar que termine cualquier despliegue. Confirmar que la API anterior sigue saludable en 3000. Usar la carpeta exacta que imprimió `CAMBIO_OK`:
 
 ```bash
-cd /var/www/docia-monorepo/repository
-flock --wait 900 /var/www/docia-monorepo/deploy/deploy.lock \
+cd /var/www/docia/monorepo/repository
+flock --wait 900 /var/www/docia/monorepo/deploy/deploy.lock \
   /home/docia-deploy/.local/node/bin/node deploy/cutover.cjs restore \
   /root/docia-monorepo-nginx-backups/cutover-REEMPLAZAR
 curl --fail --silent --show-error https://api.doc-ia.cloud/api/v1/health/ready

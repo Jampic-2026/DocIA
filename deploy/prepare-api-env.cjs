@@ -45,7 +45,7 @@ if (require.main === module) {
     const file = process.argv[checkOnly ? 3 : 2];
     const allowed = checkOnly
       ? "/var/www/docia/deploy/shared/api.env"
-      : "/var/www/docia-monorepo/deploy/shared/api.env";
+      : "/var/www/docia/monorepo/deploy/shared/api.env";
     if (file !== allowed || fs.lstatSync(file).isSymbolicLink())
       throw Error("Ruta de entorno privado inesperada.");
     const dotenv = createRequire(

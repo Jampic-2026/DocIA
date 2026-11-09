@@ -2,7 +2,7 @@
 # Isolated monorepo protocol. Never administer the legacy PM2 daemon here.
 set -Eeuo pipefail
 umask 077
-readonly ROOT=/var/www/docia-monorepo/deploy
+readonly ROOT=/var/www/docia/monorepo/deploy
 export PM2_HOME="$ROOT/pm2"
 stage=preflight activated=0 previous='' log=/dev/null
 say() { printf '[DocIA] %s\n' "$*"; }

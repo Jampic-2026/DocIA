@@ -133,7 +133,7 @@ EOF
   # Git Bash has no flock; Linux CI uses the real OS lock.
   if ! command -v flock >/dev/null; then printf '#!/usr/bin/env bash\nexit 0\n' > "$TEST_ROOT/mocks/flock"; fi
   chmod +x "$TEST_ROOT/mocks/"*
-  sed "s|readonly ROOT=/var/www/docia-monorepo/deploy|readonly ROOT=$TEST_ROOT|" "$test_dir/deploy.sh" > "$TEST_ROOT/deploy.sh"
+  sed "s|readonly ROOT=/var/www/docia/monorepo/deploy|readonly ROOT=$TEST_ROOT|" "$test_dir/deploy.sh" > "$TEST_ROOT/deploy.sh"
   package
 }
 package() {

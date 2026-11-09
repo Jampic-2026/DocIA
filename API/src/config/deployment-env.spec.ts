@@ -45,7 +45,7 @@ describe("isolated deployment environment", () => {
       NODE_ENV: "production",
       HOST: "127.0.0.1",
       PORT: "3100",
-      STORAGE_ROOT: "/var/www/docia-monorepo/deploy/shared/storage",
+      STORAGE_ROOT: "/var/www/docia/monorepo/deploy/shared/storage",
     };
     const keys = new Set([
       ...Object.keys(privateValues),

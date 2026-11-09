@@ -5,10 +5,7 @@
     "originalVariables": 66,
     "missing": [],
     "changedExamples": [],
-    "added": [
-      "HOST",
-      "FCM_SERVICE_ACCOUNT_PATH"
-    ]
+    "added": ["HOST", "FCM_SERVICE_ACCOUNT_PATH"]
   },
   "originalContractVariables": 66,
   "totalVariables": 68,
@@ -266,7 +263,7 @@
       "optional": false,
       "destination": "deploy/ecosystem.config.cjs → process environment",
       "classification": "deployment",
-      "effectiveValue": "/var/www/docia-monorepo/deploy/shared/storage",
+      "effectiveValue": "/var/www/docia/monorepo/deploy/shared/storage",
       "note": "La copia privada conserva el valor anterior, pero este ajuste de la instalación nueva tiene prioridad."
     },
     {

@@ -2,9 +2,9 @@
 # Run as root only after cloning the NEW repository into this exact location.
 set -Eeuo pipefail
 umask 077
-ROOT=/var/www/docia-monorepo/deploy
+ROOT=/var/www/docia/monorepo/deploy
 LEGACY=/var/www/docia/deploy
-REPO=/var/www/docia-monorepo/repository
+REPO=/var/www/docia/monorepo/repository
 hosting=vps
 if [[ ${1:-} == --netlify && $# == 1 ]]; then
   hosting=netlify
@@ -13,9 +13,9 @@ elif (( $# != 0 )); then
   echo 'Usage: setup-server.sh [--netlify]'
   exit 1
 fi
-[[ $EUID == 0 && $(realpath "$(dirname "$0")/..") == "$REPO" ]] || { echo 'Run as root from /var/www/docia-monorepo/repository/deploy/setup-server.sh'; exit 1; }
+[[ $EUID == 0 && $(realpath "$(dirname "$0")/..") == "$REPO" ]] || { echo 'Run as root from /var/www/docia/monorepo/repository/deploy/setup-server.sh'; exit 1; }
 id docia-deploy >/dev/null
-[[ ! -L /var/www/docia-monorepo && ! -L "$ROOT" ]] || exit 1
+[[ ! -L /var/www/docia/monorepo && ! -L "$ROOT" ]] || exit 1
 [[ ! -e "$ROOT/shared/server.conf" ]] || { echo 'Already configured; existing configuration preserved.'; exit 1; }
 for file in /etc/nginx/conf.d/docia-monorepo-preview.conf /etc/systemd/system/docia-monorepo-pm2.service; do
   [[ ! -e "$file" && ! -L "$file" ]] || { echo 'A monorepo configuration file already exists; inspect it before continuing.'; exit 1; }
@@ -33,7 +33,7 @@ metadata="$LEGACY/current-web/web/downloads/android-release.json"
 const fs=require("fs");const old=JSON.parse(fs.readFileSync(process.argv[1]));const base=JSON.parse(fs.readFileSync(process.argv[2])).versionCodeBase;
 if(!Number.isSafeInteger(old.versionCode)||!Number.isSafeInteger(base)||base<=old.versionCode) process.exit(1);
 ' "$metadata" "$REPO/config/android-version.json" || { echo 'Increase config/android-version.json above the APK currently distributed.'; exit 1; }
-install -d -m 755 /var/www/docia-monorepo
+install -d -m 755 /var/www/docia/monorepo
 install -d -o docia-deploy -g docia-deploy -m 755 "$ROOT"
 for dir in shared releases inbox logs pm2; do
   [[ ! -L "$ROOT/$dir" ]] || exit 1

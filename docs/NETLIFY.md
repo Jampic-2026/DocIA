@@ -1,6 +1,6 @@
 # API en DuckDNS y frontends en Netlify
 
-Este es el esquema del workflow actual. La landing y Flutter web se publican en dos proyectos Netlify. API, PostgreSQL, almacenamiento y APK firmado continúan en el VPS, en `/var/www/docia-monorepo`. Los sitios `.cloud` anteriores siguen funcionando.
+Este es el esquema del workflow actual. La landing y Flutter web se publican en dos proyectos Netlify. API, PostgreSQL, almacenamiento y APK firmado continúan en el VPS, en `/var/www/docia/monorepo`. Los sitios `.cloud` anteriores siguen funcionando.
 
 El nombre de API confirmado es `api-docia.duckdns.org`. Los nombres Netlify siguientes son ejemplos: **todavía deben crearse y comprobar su disponibilidad**.
 
@@ -81,17 +81,36 @@ El push verifica el proyecto; Android y despliegue se omiten mientras `DOCIA_DEP
 
 ## 3. Preparar el VPS en paralelo
 
-Como administrador, con el usuario `docia-deploy`, Node 22 aislado y las herramientas del despliegue actual disponibles. No actualizar paquetes globales. Si la carpeta nueva no existe, clonar con una clave que tenga acceso de lectura al repositorio. Ajustar el alias y nombre del repo si difieren:
+Las claves privadas se conservan en `/root/.ssh` y `/root/docia-actions-keys`, independientemente de la carpeta actual de la terminal. El código nuevo se instala en `/var/www/docia/monorepo/repository`; sus releases y entorno privado quedan en `/var/www/docia/monorepo/deploy`. Las carpetas existentes `api`, `web`, `landing`, `deploy` y `secrets` se conservan.
+
+Como administrador, con el usuario `docia-deploy`, Node 22 aislado y las herramientas del despliegue actual disponibles. No actualizar paquetes globales. La clave de lectura `/root/.ssh/docia-monorepo-github` debe estar registrada en **Laura-Nu/DocIA → Settings → Deploy keys**, sin permiso de escritura. Es distinta de la clave usada por Actions para entrar al VPS.
+
+Si todavía no se creó esa clave, generarla una única vez y registrar la parte pública que imprime este bloque. Si ya existe, conservarla y pasar al bloque de clonación:
 
 ```bash
 bash -e <<'BASH'
-test ! -e /var/www/docia-monorepo
+install -d -m 700 /root/.ssh
+test ! -e /root/.ssh/docia-monorepo-github
+test ! -e /root/.ssh/docia-monorepo-github.pub
+ssh-keygen -t ed25519 -f /root/.ssh/docia-monorepo-github -N "" -C "docia-monorepo-readonly"
+cat /root/.ssh/docia-monorepo-github.pub
+BASH
+```
+
+Clonar la versión actualizada del repositorio nuevo:
+
+```bash
+bash -e <<'BASH'
+test ! -e /var/www/docia/monorepo
+test -f /root/.ssh/docia-monorepo-github
 id docia-deploy
 /home/docia-deploy/.local/node/bin/node --version
 command -v git curl tar sha256sum flock nginx ss certbot
-install -d -m 755 /var/www/docia-monorepo
-git clone git@github-jampic:Laura-Nu/DocIA.git /var/www/docia-monorepo/repository
-cd /var/www/docia-monorepo/repository
+install -d -m 755 /var/www/docia/monorepo
+export GIT_SSH_COMMAND="ssh -F /dev/null -i /root/.ssh/docia-monorepo-github -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+git clone git@github.com:Laura-Nu/DocIA.git /var/www/docia/monorepo/repository
+cd /var/www/docia/monorepo/repository
+git config core.sshCommand "$GIT_SSH_COMMAND"
 bash deploy/setup-server.sh --netlify
 BASH
 ```
@@ -106,7 +125,7 @@ Comprobar que DuckDNS resuelve al VPS y que los puertos públicos 80/443 funcion
 
 ```bash
 bash -e <<'BASH'
-cd /var/www/docia-monorepo/repository
+cd /var/www/docia/monorepo/repository
 task_node=/home/docia-deploy/.local/node/bin/node
 "$task_node" deploy/public-config.cjs render-api config/environments/production.env deploy/generated/netlify
 api_host=$("$task_node" -e 'const fs=require("fs"); const c=require("./deploy/public-config.cjs").parseEnv(fs.readFileSync("config/environments/production.env","utf8")); process.stdout.write(new URL(c.PUBLIC_API_URL).hostname)')
@@ -114,11 +133,11 @@ case "$api_host" in *.duckdns.org) ;; *) echo 'Configurar antes el nombre real D
 site=/etc/nginx/conf.d/docia-monorepo-api.conf
 test ! -e "$site"
 test ! -L "$site"
-install -d -m 755 /var/www/docia-monorepo/deploy/acme /var/www/docia-monorepo/deploy/acme/.well-known /var/www/docia-monorepo/deploy/acme/.well-known/acme-challenge
+install -d -m 755 /var/www/docia/monorepo/deploy/acme /var/www/docia/monorepo/deploy/acme/.well-known /var/www/docia/monorepo/deploy/acme/.well-known/acme-challenge
 install -m 644 deploy/generated/netlify/docia-http-bootstrap.conf "$site"
 if ! nginx -t; then rm -f -- "$site"; exit 1; fi
 if ! systemctl reload nginx; then rm -f -- "$site"; nginx -t && systemctl reload nginx; exit 1; fi
-certbot certonly --webroot -w /var/www/docia-monorepo/deploy/acme -d "$api_host" --deploy-hook 'nginx -t && systemctl reload nginx'
+certbot certonly --webroot -w /var/www/docia/monorepo/deploy/acme -d "$api_host" --deploy-hook 'nginx -t && systemctl reload nginx'
 install -m 644 deploy/generated/netlify/docia-api.conf "$site"
 if ! nginx -t; then install -m 644 deploy/generated/netlify/docia-http-bootstrap.conf "$site"; nginx -t; exit 1; fi
 if ! systemctl reload nginx; then install -m 644 deploy/generated/netlify/docia-http-bootstrap.conf "$site"; nginx -t && systemctl reload nginx; exit 1; fi
@@ -130,7 +149,7 @@ Certbot puede pedir correo y aceptación de condiciones. Ante un fallo de emisi�
 
 ## 5. Primer despliegue y arranque automático
 
-Después de emitir el certificado, establecer en `/var/www/docia-monorepo/deploy/shared/server.conf`:
+Después de emitir el certificado, establecer en `/var/www/docia/monorepo/deploy/shared/server.conf`:
 
 ```bash
 FRONTEND_HOSTING=netlify
@@ -158,8 +177,8 @@ Habilitar el servicio nuevo cuando el primer deploy haya guardado su lista; esto
 
 ```bash
 bash -e <<'BASH'
-test -s /var/www/docia-monorepo/deploy/pm2/dump.pm2
-sudo -u docia-deploy env PATH=/home/docia-deploy/.local/node/bin:/home/docia-deploy/.local/bin:/usr/bin:/bin PM2_HOME=/var/www/docia-monorepo/deploy/pm2 /home/docia-deploy/.local/bin/pm2 kill
+test -s /var/www/docia/monorepo/deploy/pm2/dump.pm2
+sudo -u docia-deploy env PATH=/home/docia-deploy/.local/node/bin:/home/docia-deploy/.local/bin:/usr/bin:/bin PM2_HOME=/var/www/docia/monorepo/deploy/pm2 /home/docia-deploy/.local/bin/pm2 kill
 systemctl enable --now docia-monorepo-pm2.service
 systemctl status docia-monorepo-pm2.service --no-pager
 curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 http://127.0.0.1:3100/api/v1/health/ready

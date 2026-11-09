@@ -13,7 +13,7 @@ const pm2Keys = {
   NODE_ENV: "production",
   HOST: "127.0.0.1",
   PORT: "3100",
-  STORAGE_ROOT: "/var/www/docia-monorepo/deploy/shared/storage",
+  STORAGE_ROOT: "/var/www/docia/monorepo/deploy/shared/storage",
 };
 const databaseKeys = new Set([
   "DATABASE_URL",

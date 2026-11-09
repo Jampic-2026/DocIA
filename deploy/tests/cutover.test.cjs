@@ -16,7 +16,7 @@ test("web supports legacy checkout and release paths", () => {
   ])
     assert.equal(
       transform(`root ${from};`, "web"),
-      "root /var/www/docia-monorepo/deploy/current-web/web;",
+      "root /var/www/docia/monorepo/deploy/current-web/web;",
     );
 });
 test("landing switches both static root and APK alias", () =>
@@ -25,7 +25,7 @@ test("landing switches both static root and APK alias", () =>
       "root /var/www/docia/deploy/current-landing/landing; alias /var/www/docia/deploy/current-web/web/downloads/;",
       "landing",
     ),
-    "root /var/www/docia-monorepo/deploy/current-landing/landing; alias /var/www/docia-monorepo/deploy/current-web/web/downloads/;",
+    "root /var/www/docia/monorepo/deploy/current-landing/landing; alias /var/www/docia/monorepo/deploy/current-web/web/downloads/;",
   ));
 test("unexpected upstream or root requires review", () => {
   assert.throws(() => transform("proxy_pass http://other:8000;", "api"));

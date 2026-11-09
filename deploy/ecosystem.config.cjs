@@ -20,7 +20,7 @@ module.exports = {
         // Optional common public config; credentials remain exclusively in api/.env.
         DOCIA_SITES_FILE: path.join(__dirname, "PUBLIC_CONFIG.env"),
         DOCIA_RELEASE: path.basename(__dirname),
-        STORAGE_ROOT: "/var/www/docia-monorepo/deploy/shared/storage",
+        STORAGE_ROOT: "/var/www/docia/monorepo/deploy/shared/storage",
       },
     },
   ],

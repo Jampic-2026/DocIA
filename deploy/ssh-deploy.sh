@@ -40,5 +40,5 @@ Host docia-vps
 EOF
 unset VPS_SSH_KEY VPS_KNOWN_HOSTS
 scp -F "$ssh_dir/config" -- "release/$component-$RELEASE_ID.tar.gz" "release/$component-$RELEASE_ID.sha256" \
-  docia-vps:/var/www/docia-monorepo/deploy/inbox/
+  docia-vps:/var/www/docia/monorepo/deploy/inbox/
 ssh -F "$ssh_dir/config" docia-vps "bash -s -- $component $RELEASE_ID" < deploy/deploy.sh
