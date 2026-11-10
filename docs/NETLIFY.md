@@ -161,6 +161,8 @@ RUN_MIGRATIONS=0
 
 Activar `DOCIA_DEPLOY_ENABLED=true` en GitHub y ejecutar **Actions → Verify and deploy DocIA → Run workflow → main**. Se verifica el acceso y URL de ambos proyectos Netlify antes de cambiar el VPS. Después se publican API/APK → web → landing. El VPS conserva una copia privada del build Flutter para versionar y comprobar su APK; no tiene un virtual host público para la nueva web. La landing no se despliega al VPS.
 
+Si `android` y `deploy` aparecen omitidos, abrir el paso **Show deployment eligibility** del job `tools` o el resumen de esa ejecución. Muestra repositorio, rama, evento, workflow, commit y el estado del interruptor público; no lee secretos. `DOCIA_DEPLOY_ENABLED` debe estar en **Settings → Secrets and variables → Actions → Variables → Repository variables**, con valor `true` sin comillas ni espacios. Si aparece como no disponible, revisar que no se haya cargado como secret, únicamente dentro del environment `production` o en otro repositorio. Lanzar una ejecución nueva desde `main` después de corregirlo.
+
 Cada publicación Netlify comprueba un borrador antes de activarlo y verifica después la URL pública. Ante un fallo público, intenta restaurar la versión anterior del mismo sitio y Actions falla. La recuperación es por componente: un fallo de landing no deshace una API/web saludable ya publicada. Los fallos API/APK mantienen el rollback del VPS. Los errores no imprimen tokens ni respuestas privadas.
 
 Comprobar con las direcciones reales:

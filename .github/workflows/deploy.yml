@@ -27,6 +27,32 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0 / Node 24
         with:
           node-version: "22"
+      - name: Show deployment eligibility
+        env:
+          DOCIA_DEPLOY_FLAG: ${{ vars.DOCIA_DEPLOY_ENABLED }}
+          DOCIA_DEPLOY_CONDITION: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.DOCIA_DEPLOY_ENABLED == 'true' }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const flag = process.env.DOCIA_DEPLOY_FLAG || '';
+          const report = {
+            repository: process.env.GITHUB_REPOSITORY,
+            ref: process.env.GITHUB_REF,
+            event: process.env.GITHUB_EVENT_NAME,
+            workflow: process.env.GITHUB_WORKFLOW_REF,
+            commit: process.env.GITHUB_SHA,
+            DOCIA_DEPLOY_ENABLED: ['true', 'false'].includes(flag)
+              ? flag : flag === '' ? '(no disponible)' : '(valor inválido; omitido)',
+            deployCondition: process.env.DOCIA_DEPLOY_CONDITION === 'true',
+          };
+          const details = JSON.stringify(report, null, 2);
+          console.log(details);
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `### Deployment eligibility\n\n\`\`\`json\n${details}\n\`\`\`\n`);
+          if (!report.deployCondition) {
+            console.log('::notice::Android y deploy se omitirán. Se requiere main, un evento distinto de pull_request y la repository variable DOCIA_DEPLOY_ENABLED=true. Revisar el diagnóstico anterior.');
+          }
+          NODE
       - run: npm ci --prefix Landing --no-audit --no-fund
       - run: npm run test:tools
       - run: node --test deploy/tests/landing-env.test.cjs
@@ -174,7 +200,8 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          export ANDROID_VERSION_CODE_BASE=$(node -p "require('../config/android-version.json').versionCodeBase")
+          ANDROID_VERSION_CODE_BASE=$(node -p "require('../config/android-version.json').versionCodeBase")
+          export ANDROID_VERSION_CODE_BASE
           node ../deploy/android-release.cjs prepare
           node ../deploy/android-release.cjs verify-keystore
       - name: Build signed Android APK
