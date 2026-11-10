@@ -25,6 +25,8 @@ New-Item -ItemType Directory -Force ".validation/netlify-initial" | Out-Null
 
 Cargar esa carpeta mediante Deploy manually en ambos proyectos, establecer su visibilidad pública y comprobar sus URL HTTPS desde una ventana privada. Algunos proyectos pueden crearse privados por defecto. No habilitar contraseña, snippets, minificación ni otras transformaciones del sitio: se verifican los bytes del build. La página temporal se reemplaza al publicar la aplicación real.
 
+Revisar **Project configuration → General → Visitor access → Project visibility** en ambos proyectos: **producción y previews tienen ajustes independientes y ambos deben ser públicos** para este flujo. Hacer pública la producción puede dejar privados los previews. El workflow verifica un borrador sin sesión antes de publicarlo; si recibe una página de login o acceso denegado, se detiene. Esta visibilidad corresponde al sitio estático generado y no cambia la privacidad del repositorio ni publica secretos. [Visibilidad de proyectos y previews en Netlify](https://docs.netlify.com/manage/security/secure-access-to-sites/project-visibility/).
+
 ## 2. Configuración central y GitHub
 
 Editar `config/environments/production.env` con los tres nombres reales:
@@ -164,6 +166,8 @@ Activar `DOCIA_DEPLOY_ENABLED=true` en GitHub y ejecutar **Actions → Verify an
 Si `android` y `deploy` aparecen omitidos, abrir el paso **Show deployment eligibility** del job `tools` o el resumen de esa ejecución. Muestra repositorio, rama, evento, workflow, commit y el estado del interruptor público; no lee secretos. `DOCIA_DEPLOY_ENABLED` debe estar en **Settings → Secrets and variables → Actions → Variables → Repository variables**, con valor `true` sin comillas ni espacios. Si aparece como no disponible, revisar que no se haya cargado como secret, únicamente dentro del environment `production` o en otro repositorio. Lanzar una ejecución nueva desde `main` después de corregirlo.
 
 Cada publicación Netlify comprueba un borrador antes de activarlo y verifica después la URL pública. Ante un fallo público, intenta restaurar la versión anterior del mismo sitio y Actions falla. La recuperación es por componente: un fallo de landing no deshace una API/web saludable ya publicada. Los fallos API/APK mantienen el rollback del VPS. Los errores no imprimen tokens ni respuestas privadas.
+
+Si falla `docia-release.txt`, revisar si el mensaje indica **borrador** o **público**, la URL comprobada y el código HTTP. Un HTML en lugar del marcador puede corresponder a login, protección de previews o una regla SPA; no asumir que es caché ni ignorar la comparación. Abrir el enlace permanente del deploy y su `/docia-release.txt` sin sesión y comprobar los archivos publicados en el panel. Los cambios del script y los reintentos deben ejecutarse mediante un push o una ejecución nueva completa desde `main`: repetir solo `deploy` reutiliza artefactos de otro intento cuyo `RELEASE_ID` ya no coincide.
 
 Comprobar con las direcciones reales:
 

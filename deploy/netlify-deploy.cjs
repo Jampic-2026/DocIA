@@ -218,7 +218,14 @@ function draftOrigin(value, siteOrigin) {
   return url.origin;
 }
 
-async function verify(origin, component, directory, id, fetcher = fetch) {
+async function verify(
+  origin,
+  component,
+  directory,
+  id,
+  fetcher = fetch,
+  phase = "público",
+) {
   const files = filesIn(directory);
   const probes = [
     "docia-release.txt",
@@ -236,16 +243,36 @@ async function verify(origin, component, directory, id, fetcher = fetch) {
     try {
       response = await fetcher(
         `${origin}/${name}?deployment=${releaseId(id)}`,
-        { redirect: "error", signal: AbortSignal.timeout(30000) },
+        { redirect: "manual", signal: AbortSignal.timeout(30000) },
       );
       if (response.ok) body = Buffer.from(await response.arrayBuffer());
     } catch {
-      fail(`${component}: no se pudo comprobar ${name} por HTTPS.`);
-    }
-    if (!response.ok || hash(body) !== hash(fs.readFileSync(file)))
       fail(
-        `${component}: el contenido público de ${name} no coincide con la release.`,
+        `${component} (${phase}): no se pudo comprobar ${origin}/${name} por HTTPS.`,
       );
+    }
+    if (!response.ok) {
+      const hint = [301, 302, 303, 307, 308, 401, 403].includes(response.status)
+        ? "Revisar visibilidad de producción y previews, contraseña, login y reglas de acceso de Netlify."
+        : response.status === 404
+          ? "El recurso no está disponible; revisar los archivos del deploy en Netlify."
+          : "Revisar el estado del deploy y las reglas de acceso en Netlify.";
+      fail(
+        `${component} (${phase}): HTTP ${response.status} en ${origin}/${name}. ${hint}`,
+      );
+    }
+    if (hash(body) !== hash(fs.readFileSync(file))) {
+      const html = /^\s*</.test(body.subarray(0, 512).toString("utf8"));
+      const hint =
+        name === "docia-release.txt" && html
+          ? "Se recibió HTML en lugar del marcador; revisar login/protección de previews y reglas SPA."
+          : name === "docia-release.txt"
+            ? "El marcador recibido tiene bytes diferentes; revisar la versión y los archivos del deploy."
+            : "Revisar transformaciones, snippets y los archivos del deploy.";
+      fail(
+        `${component} (${phase}): HTTP ${response.status}, el contenido de ${origin}/${name} no coincide con la release. ${hint} No se imprime el cuerpo recibido.`,
+      );
+    }
   }
 }
 
@@ -314,13 +341,12 @@ async function publish(
     );
   }
   await wait((data) => data.state === "ready");
-  await verify(
-    draftOrigin(created.deploy_ssl_url, sites[componentKey(component)]),
-    component,
-    prepared,
-    id,
-    fetcher,
+  const preview = draftOrigin(
+    created.deploy_ssl_url,
+    sites[componentKey(component)],
   );
+  console.log(`[DocIA] Netlify ${component}: verificando borrador ${preview}.`);
+  await verify(preview, component, prepared, id, fetcher, "borrador");
   const latest = await api(`/sites/${ids[component]}`);
   if ((latest.published_deploy?.id || undefined) !== previous)
     fail(
@@ -329,6 +355,7 @@ async function publish(
   try {
     await api(`/sites/${ids[component]}/deploys/${current}/restore`, "POST");
     let healthy = false;
+    let lastError;
     for (let attempt = 0; attempt < 5; attempt++) {
       try {
         await verify(
@@ -340,12 +367,15 @@ async function publish(
         );
         healthy = true;
         break;
-      } catch {
+      } catch (error) {
+        lastError = error;
         await sleep(2000);
       }
     }
     if (!healthy)
-      fail(`Netlify ${component}: falló la salud de la URL pública.`);
+      fail(
+        `Netlify ${component}: falló la salud de la URL pública. ${lastError.message}`,
+      );
   } catch (error) {
     const latest = await api(`/sites/${ids[component]}`);
     if (latest.published_deploy?.id === current) {

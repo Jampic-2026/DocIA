@@ -10,6 +10,7 @@ const {
   settings,
   preflight,
   publish,
+  verify,
 } = require("../netlify-deploy.cjs");
 const { render } = require("../public-config.cjs");
 const sites = {
@@ -168,6 +169,54 @@ test("preflight rejects wrong URLs and Git-connected projects before publishing"
   }
 });
 
+test("verification identifies draft HTTP failures without following redirects or exposing responses", async (t) => {
+  const { directory, prepared } = fixture(t);
+  const output = prepared();
+  for (const status of [302, 401, 403, 404, 503]) {
+    await assert.rejects(
+      verify(
+        "https://new-deploy--docia.netlify.app",
+        "web",
+        output,
+        id,
+        async (_address, options) => {
+          assert.equal(options.redirect, "manual");
+          return new Response("synthetic-private-response", { status });
+        },
+        "borrador",
+      ),
+      (error) =>
+        error.message.includes("web (borrador)") &&
+        error.message.includes(`HTTP ${status}`) &&
+        error.message.includes("/docia-release.txt") &&
+        !error.message.includes("synthetic-private-response"),
+    );
+  }
+});
+
+test("verification distinguishes an HTML login page from a wrong marker without exposing either", async (t) => {
+  const { prepared } = fixture(t);
+  const output = prepared();
+  for (const [body, expected] of [
+    ["<!doctype html><p>synthetic-private-login</p>", "Se recibió HTML"],
+    ["synthetic-private-marker", "bytes diferentes"],
+  ]) {
+    await assert.rejects(
+      verify(
+        "https://new-deploy--docia.netlify.app",
+        "web",
+        output,
+        id,
+        async () => new Response(body),
+        "borrador",
+      ),
+      (error) =>
+        error.message.includes(expected) &&
+        !error.message.includes("synthetic-private"),
+    );
+  }
+});
+
 function service(directory, component, mode) {
   const calls = [],
     uploads = [],
@@ -265,6 +314,13 @@ for (const mode of [
         sleep: async () => {},
         attempts: 2,
       }),
+      (error) => {
+        if (mode === "draft-failure")
+          assert.match(error.message, /web \(borrador\).*HTTP 200/);
+        if (mode === "public-failure")
+          assert.match(error.message, /web \(público\).*HTTP 200/);
+        return true;
+      },
     );
     assert.equal(
       mock.current.value,
