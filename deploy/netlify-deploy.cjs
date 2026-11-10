@@ -218,37 +218,51 @@ function draftOrigin(value, siteOrigin) {
   return url.origin;
 }
 
-function matchesWithNetlifyBadge(body, expected, siteId) {
+function removeKnownAddition(body, addition) {
+  const offset = body.indexOf(addition);
+  if (offset < 0) return [body];
+  if (offset !== body.lastIndexOf(addition)) return [];
+  const end = offset + addition.length;
+  const starts = [offset],
+    ends = [end];
+  if (body[offset - 1] === 10)
+    starts.push(offset - (body[offset - 2] === 13 ? 2 : 1));
+  if (body[end] === 10) ends.push(end + 1);
+  else if (body[end] === 13 && body[end + 1] === 10) ends.push(end + 2);
+  return starts.flatMap((start) =>
+    ends.map((finish) =>
+      Buffer.concat([body.subarray(0, start), body.subarray(finish)]),
+    ),
+  );
+}
+
+function matchesWithNetlifyAdditions(body, expected, siteId) {
   if (
     !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(
       siteId || "",
     )
   )
     return false;
-  // Exact script observed on Netlify Free public responses. This is a
-  // comparison exception only: never rewrite the build or hide the badge.
-  const badge = Buffer.from(
-    `<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="${siteId}" data-app-host="app.netlify.com" data-account-tier="free"></script>`,
-  );
-  const offset = body.lastIndexOf(badge);
-  if (offset < 0) return false;
-  const end = offset + badge.length;
-  const starts = [offset],
-    ends = [end];
-  // The script can be inserted inside complete HTML, not only at EOF as on
-  // the initial placeholder page. Allow at most one adjacent line break per
-  // side, then compare ALL remaining bytes, before AND after the insertion.
-  if (body[offset - 1] === 10)
-    starts.push(offset - (body[offset - 2] === 13 ? 2 : 1));
-  if (body[end] === 10) ends.push(end + 1);
-  else if (body[end] === 13 && body[end + 1] === 10) ends.push(end + 2);
-  return starts.some((start) =>
-    ends.some((finish) =>
-      Buffer.concat([body.subarray(0, start), body.subarray(finish)]).equals(
-        expected,
-      ),
+  // The real public response contains both this script and a promotional
+  // HTML comment. Each exact block is pinned to the verified Project ID.
+  // Compare only: never rewrite the build or hide any provider content.
+  const additions = [
+    Buffer.from(
+      `<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="${siteId}" data-app-host="app.netlify.com" data-account-tier="free"></script>`,
     ),
-  );
+    Buffer.from(
+      `<!-- This site is hosted on Netlify. Anyone can build and deploy a site\n     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=${siteId}\n     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->`,
+    ),
+  ];
+  if (!additions.some((addition) => body.includes(addition))) return false;
+  let candidates = [body];
+  for (const addition of additions)
+    candidates = candidates.flatMap((candidate) =>
+      removeKnownAddition(candidate, addition),
+    );
+  // At most one adjacent line break per side may accompany each block.
+  // Everything else, before, between and after them, must match byte for byte.
+  return candidates.some((candidate) => candidate.equals(expected));
 }
 
 async function verify(
@@ -297,12 +311,12 @@ async function verify(
     }
     const expected = fs.readFileSync(file);
     const exact = hash(body) === hash(expected);
-    const badge =
+    const providerAdditions =
       !exact &&
       phase === "público" &&
       name === "index.html" &&
-      matchesWithNetlifyBadge(body, expected, siteId);
-    if (!exact && !badge) {
+      matchesWithNetlifyAdditions(body, expected, siteId);
+    if (!exact && !providerAdditions) {
       const html = /^\s*</.test(body.subarray(0, 512).toString("utf8"));
       let hint =
         name === "docia-release.txt" && html
@@ -316,9 +330,9 @@ async function verify(
         `${component} (${phase}): HTTP ${response.status}, el contenido de ${origin}/${name} no coincide con la release. ${hint} No se imprime el cuerpo recibido.`,
       );
     }
-    if (badge)
+    if (providerAdditions)
       console.log(
-        `[DocIA] Netlify ${component}: index.html verificado; única adición admitida: distintivo público de Netlify para este Project ID.`,
+        `[DocIA] Netlify ${component}: index.html verificado; solo se admiten el distintivo y el comentario conocidos de Netlify para este Project ID.`,
       );
   }
 }

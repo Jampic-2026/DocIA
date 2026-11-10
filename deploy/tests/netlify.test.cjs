@@ -26,6 +26,11 @@ const ids = {
 };
 const badge = (siteId) =>
   `<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="${siteId}" data-app-host="app.netlify.com" data-account-tier="free"></script>`;
+const capture = require("./fixtures/netlify-public-html.json");
+const capturedComment = capture.publicHtml.match(
+  /<!-- This site is hosted on Netlify\.[\s\S]*?-->/,
+)[0];
+const promotion = (siteId) => capturedComment.replace(capture.siteId, siteId);
 
 function fixture(t, component = "web") {
   const directory = fs.mkdtempSync(
@@ -297,6 +302,112 @@ test("complete public HTML permits the same provider script inside the document 
   }
 });
 
+test("replays the captured 2949-byte build and 3484-byte Netlify public response", async (t) => {
+  assert.equal(Buffer.byteLength(capture.expectedHtml), 2949);
+  assert.equal(Buffer.byteLength(capture.publicHtml), 3484);
+  const { prepared } = fixture(t);
+  const output = prepared();
+  fs.writeFileSync(path.join(output, "index.html"), capture.expectedHtml);
+  await verify(
+    "https://app-docia.netlify.app",
+    "web",
+    output,
+    id,
+    async (address) => {
+      const name = new URL(address).pathname.slice(1);
+      return new Response(
+        name === "index.html"
+          ? capture.publicHtml
+          : fs.readFileSync(path.join(output, name)),
+      );
+    },
+    "público",
+    capture.siteId,
+  );
+  assert.equal(
+    fs.readFileSync(path.join(output, "index.html"), "utf8"),
+    capture.expectedHtml,
+  );
+});
+
+test("captured provider comment may be present alone but never admits unknown or modified content", async (t) => {
+  const { prepared } = fixture(t);
+  const output = prepared();
+  fs.writeFileSync(path.join(output, "index.html"), capture.expectedHtml);
+  const fetcher = (html) => async (address) => {
+    const name = new URL(address).pathname.slice(1);
+    return new Response(
+      name === "index.html" ? html : fs.readFileSync(path.join(output, name)),
+    );
+  };
+  // Remove precisely the script and its own provider-added trailing newline.
+  const commentOnly = capture.publicHtml.replace(
+    `${badge(capture.siteId)}\n`,
+    "",
+  );
+  await verify(
+    "https://app-docia.netlify.app",
+    "web",
+    output,
+    id,
+    fetcher(commentOnly),
+    "público",
+    capture.siteId,
+  );
+  const changes = [
+    capture.publicHtml.replace(
+      `utm_id=${capture.siteId}`,
+      `utm_id=${ids.landing}`,
+    ),
+    capture.publicHtml.replace(
+      "https://netlify.new/",
+      "https://unexpected.invalid/",
+    ),
+    capture.publicHtml.replace(
+      capturedComment,
+      `${capturedComment}\n${capturedComment}`,
+    ),
+    capture.publicHtml.replace(
+      capturedComment,
+      `${capturedComment}\n<!-- unknown addition -->`,
+    ),
+    capture.publicHtml.replace(
+      "Tu salud, conectada",
+      "synthetic-private-change",
+    ),
+    `${capture.publicHtml}synthetic-private-change`,
+  ];
+  for (const html of changes) {
+    await assert.rejects(
+      verify(
+        "https://app-docia.netlify.app",
+        "web",
+        output,
+        id,
+        fetcher(html),
+        "público",
+        capture.siteId,
+      ),
+      (error) =>
+        error.message.includes("no coincide") &&
+        !error.message.includes("synthetic-private-change") &&
+        !error.message.includes("utm_campaign"),
+    );
+  }
+  await assert.rejects(
+    verify(
+      "https://app-docia.netlify.app",
+      "web",
+      output,
+      id,
+      fetcher(capture.publicHtml),
+      "borrador",
+      capture.siteId,
+    ),
+    /no coincide/,
+  );
+});
+
 test("badge handling never admits other scripts, wrong identities, changed HTML/assets or draft changes", async (t) => {
   const { prepared } = fixture(t);
   const output = prepared();
@@ -423,6 +534,7 @@ function service(directory, component, mode) {
         url.pathname === "/index.html"
         ? content
             .toString("utf8")
+            .replace("</head>", `${promotion(ids[component])}\n</head>`)
             .replace(
               "</body>",
               `\n${badge(ids[component])}\n${mode === "public-badge-tampered" ? "unexpected-change" : ""}</body>`,
@@ -449,7 +561,7 @@ for (const component of ["web", "landing"])
     );
   });
 for (const component of ["web", "landing"])
-  test(`publishes ${component} with the provider badge while preserving the staged build`, async (t) => {
+  test(`publishes ${component} with the captured provider additions while preserving the staged build`, async (t) => {
     const { directory, prepared } = fixture(t, component);
     const output = prepared();
     const original = fs.readFileSync(path.join(output, "index.html"));
