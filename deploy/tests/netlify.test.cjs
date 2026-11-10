@@ -24,6 +24,8 @@ const ids = {
   web: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
   landing: "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
 };
+const badge = (siteId) =>
+  `<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="${siteId}" data-app-host="app.netlify.com" data-account-tier="free"></script>`;
 
 function fixture(t, component = "web") {
   const directory = fs.mkdtempSync(
@@ -217,6 +219,104 @@ test("verification distinguishes an HTML login page from a wrong marker without 
   }
 });
 
+test("public HTML accepts only the known trailing Netlify badge and preserves UTF-8 and build line endings", async (t) => {
+  const { prepared } = fixture(t);
+  const output = prepared();
+  for (const ending of ["", "\n", "\r\n"]) {
+    const original = Buffer.from(
+      `<!doctype html><html><p>Clínica: ñ 🩺</p></html>${ending}`,
+    );
+    fs.writeFileSync(path.join(output, "index.html"), original);
+    for (const before of ["", "\n", "\r\n"]) {
+      for (const after of ["", "\n", "\r\n"]) {
+        await verify(
+          sites.PUBLIC_WEB_URL,
+          "web",
+          output,
+          id,
+          async (address) => {
+            const name = new URL(address).pathname.slice(1);
+            const content = fs.readFileSync(path.join(output, name));
+            return new Response(
+              name === "index.html"
+                ? Buffer.concat([
+                    content,
+                    Buffer.from(`${before}${badge(ids.web)}${after}`),
+                  ])
+                : content,
+            );
+          },
+          "público",
+          ids.web,
+        );
+      }
+    }
+    assert.deepEqual(
+      fs.readFileSync(path.join(output, "index.html")),
+      original,
+    );
+  }
+});
+
+test("badge handling never admits other scripts, wrong identities, changed HTML/assets or draft changes", async (t) => {
+  const { prepared } = fixture(t);
+  const output = prepared();
+  const known = badge(ids.web);
+  const variants = [
+    { added: badge(ids.landing) },
+    { added: known.replace('src="/', 'src="https://evil.invalid/') },
+    { added: known.replace("hud?variant=public", "other?variant=public") },
+    {
+      added: known.replace(
+        'data-account-tier="free"',
+        'data-account-tier="unknown"',
+      ),
+    },
+    {
+      added: known.replace("async ", 'async onload="synthetic-private-value" '),
+    },
+    { added: known.replace("</script>", "synthetic-private-value</script>") },
+    { added: `${known}\n${known}` },
+    { added: `${known}\n<script src="/unexpected.js"></script>` },
+    { added: known, changed: "index.html" },
+    { added: known, changed: "main.dart.js" },
+    { added: known, changed: "docia-release.txt" },
+    { added: known, phase: "borrador" },
+    { added: known, siteId: "invalid" },
+    { added: known, siteId: undefined },
+  ];
+  for (const variant of variants) {
+    await assert.rejects(
+      verify(
+        sites.PUBLIC_WEB_URL,
+        "web",
+        output,
+        id,
+        async (address) => {
+          const name = new URL(address).pathname.slice(1);
+          let content = fs.readFileSync(path.join(output, name));
+          if (name === variant.changed)
+            content = Buffer.concat([
+              content,
+              Buffer.from("synthetic-private-value"),
+            ]);
+          if (name === "index.html")
+            content = Buffer.concat([
+              content,
+              Buffer.from(`\n${variant.added}\n`),
+            ]);
+          return new Response(content);
+        },
+        variant.phase || "público",
+        Object.hasOwn(variant, "siteId") ? variant.siteId : ids.web,
+      ),
+      (error) =>
+        error.message.includes("no coincide") &&
+        !error.message.includes("synthetic-private-value"),
+    );
+  }
+});
+
 function service(directory, component, mode) {
   const calls = [],
     uploads = [],
@@ -277,7 +377,19 @@ function service(directory, component, mode) {
       component,
       url.pathname.slice(1),
     );
-    return new Response(fs.readFileSync(file));
+    const content = fs.readFileSync(file);
+    return new Response(
+      ["public-badge", "public-badge-tampered"].includes(mode) &&
+        !draft &&
+        url.pathname === "/index.html"
+        ? Buffer.concat([
+            content,
+            Buffer.from(
+              `${mode === "public-badge-tampered" ? "unexpected-change" : ""}\n${badge(ids[component])}\n`,
+            ),
+          ])
+        : content,
+    );
   };
   return { api, fetcher, calls, current };
 }
@@ -297,9 +409,27 @@ for (const component of ["web", "landing"])
       1,
     );
   });
+for (const component of ["web", "landing"])
+  test(`publishes ${component} with the provider badge while preserving the staged build`, async (t) => {
+    const { directory, prepared } = fixture(t, component);
+    const output = prepared();
+    const original = fs.readFileSync(path.join(output, "index.html"));
+    const mock = service(directory, component, "public-badge");
+    await publish(component, mock.api, ids, sites, id, directory, {
+      fetcher: mock.fetcher,
+      sleep: async () => {},
+      attempts: 2,
+    });
+    assert.equal(mock.current.value, "new-deploy");
+    assert.deepEqual(
+      fs.readFileSync(path.join(output, "index.html")),
+      original,
+    );
+  });
 for (const mode of [
   "draft-failure",
   "public-failure",
+  "public-badge-tampered",
   "first-failure",
   "processing-error",
   "timeout",

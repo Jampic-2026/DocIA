@@ -218,6 +218,33 @@ function draftOrigin(value, siteOrigin) {
   return url.origin;
 }
 
+function matchesWithNetlifyBadge(body, expected, siteId) {
+  if (
+    !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(
+      siteId || "",
+    )
+  )
+    return false;
+  // Exact script observed on Netlify Free public responses. This is a
+  // comparison exception only: never rewrite the build or hide the badge.
+  const badge = Buffer.from(
+    `<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="${siteId}" data-app-host="app.netlify.com" data-account-tier="free"></script>`,
+  );
+  const offset = body.lastIndexOf(badge);
+  if (offset < 0) return false;
+  const tail = body.subarray(offset + badge.length).toString("utf8");
+  if (!["", "\n", "\r\n"].includes(tail)) return false;
+  const original = body.subarray(0, offset);
+  if (original.equals(expected)) return true;
+  // Netlify can add one line break immediately before the appended script.
+  // Every original byte, including the build's line endings, must still match.
+  if (original.subarray(-2).equals(Buffer.from("\r\n")))
+    return original.subarray(0, -2).equals(expected);
+  if (original.subarray(-1).equals(Buffer.from("\n")))
+    return original.subarray(0, -1).equals(expected);
+  return false;
+}
+
 async function verify(
   origin,
   component,
@@ -225,6 +252,7 @@ async function verify(
   id,
   fetcher = fetch,
   phase = "público",
+  siteId,
 ) {
   const files = filesIn(directory);
   const probes = [
@@ -261,7 +289,14 @@ async function verify(
         `${component} (${phase}): HTTP ${response.status} en ${origin}/${name}. ${hint}`,
       );
     }
-    if (hash(body) !== hash(fs.readFileSync(file))) {
+    const expected = fs.readFileSync(file);
+    const exact = hash(body) === hash(expected);
+    const badge =
+      !exact &&
+      phase === "público" &&
+      name === "index.html" &&
+      matchesWithNetlifyBadge(body, expected, siteId);
+    if (!exact && !badge) {
       const html = /^\s*</.test(body.subarray(0, 512).toString("utf8"));
       const hint =
         name === "docia-release.txt" && html
@@ -273,6 +308,10 @@ async function verify(
         `${component} (${phase}): HTTP ${response.status}, el contenido de ${origin}/${name} no coincide con la release. ${hint} No se imprime el cuerpo recibido.`,
       );
     }
+    if (badge)
+      console.log(
+        `[DocIA] Netlify ${component}: index.html verificado; única adición admitida: distintivo público de Netlify para este Project ID.`,
+      );
   }
 }
 
@@ -364,6 +403,8 @@ async function publish(
           prepared,
           id,
           fetcher,
+          "público",
+          ids[component],
         );
         healthy = true;
         break;
