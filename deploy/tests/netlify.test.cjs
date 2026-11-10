@@ -39,7 +39,7 @@ function fixture(t, component = "web") {
   fs.mkdirSync(path.join(output, "assets"), { recursive: true });
   fs.writeFileSync(
     path.join(output, "index.html"),
-    '<script src="/assets/app.js"></script>',
+    '<!doctype html><html><head><title>DocIA</title></head><body><div id="app"></div><script src="/assets/app.js"></script></body></html>\n',
   );
   fs.writeFileSync(path.join(output, "assets/app.js"), "const app = true;");
   if (component === "web")
@@ -258,6 +258,45 @@ test("public HTML accepts only the known trailing Netlify badge and preserves UT
   }
 });
 
+test("complete public HTML permits the same provider script inside the document without changing surrounding bytes", async (t) => {
+  const { prepared } = fixture(t);
+  const output = prepared();
+  for (const newline of ["\n", "\r\n"]) {
+    const original = `<!doctype html><html><head><title>Clínica</title></head>${newline}<body><p>Atención 🩺</p>${newline}</body>${newline}</html>${newline}`;
+    fs.writeFileSync(path.join(output, "index.html"), original);
+    for (const anchor of ["</head>", "</body>", "</html>"]) {
+      for (const before of ["", newline]) {
+        for (const after of ["", newline]) {
+          const received = original.replace(
+            anchor,
+            `${before}${badge(ids.web)}${after}${anchor}`,
+          );
+          await verify(
+            sites.PUBLIC_WEB_URL,
+            "web",
+            output,
+            id,
+            async (address) => {
+              const name = new URL(address).pathname.slice(1);
+              return new Response(
+                name === "index.html"
+                  ? received
+                  : fs.readFileSync(path.join(output, name)),
+              );
+            },
+            "público",
+            ids.web,
+          );
+        }
+      }
+    }
+    assert.equal(
+      fs.readFileSync(path.join(output, "index.html"), "utf8"),
+      original,
+    );
+  }
+});
+
 test("badge handling never admits other scripts, wrong identities, changed HTML/assets or draft changes", async (t) => {
   const { prepared } = fixture(t);
   const output = prepared();
@@ -382,12 +421,12 @@ function service(directory, component, mode) {
       ["public-badge", "public-badge-tampered"].includes(mode) &&
         !draft &&
         url.pathname === "/index.html"
-        ? Buffer.concat([
-            content,
-            Buffer.from(
-              `${mode === "public-badge-tampered" ? "unexpected-change" : ""}\n${badge(ids[component])}\n`,
-            ),
-          ])
+        ? content
+            .toString("utf8")
+            .replace(
+              "</body>",
+              `\n${badge(ids[component])}\n${mode === "public-badge-tampered" ? "unexpected-change" : ""}</body>`,
+            )
         : content,
     );
   };

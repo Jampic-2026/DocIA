@@ -232,17 +232,23 @@ function matchesWithNetlifyBadge(body, expected, siteId) {
   );
   const offset = body.lastIndexOf(badge);
   if (offset < 0) return false;
-  const tail = body.subarray(offset + badge.length).toString("utf8");
-  if (!["", "\n", "\r\n"].includes(tail)) return false;
-  const original = body.subarray(0, offset);
-  if (original.equals(expected)) return true;
-  // Netlify can add one line break immediately before the appended script.
-  // Every original byte, including the build's line endings, must still match.
-  if (original.subarray(-2).equals(Buffer.from("\r\n")))
-    return original.subarray(0, -2).equals(expected);
-  if (original.subarray(-1).equals(Buffer.from("\n")))
-    return original.subarray(0, -1).equals(expected);
-  return false;
+  const end = offset + badge.length;
+  const starts = [offset],
+    ends = [end];
+  // The script can be inserted inside complete HTML, not only at EOF as on
+  // the initial placeholder page. Allow at most one adjacent line break per
+  // side, then compare ALL remaining bytes, before AND after the insertion.
+  if (body[offset - 1] === 10)
+    starts.push(offset - (body[offset - 2] === 13 ? 2 : 1));
+  if (body[end] === 10) ends.push(end + 1);
+  else if (body[end] === 13 && body[end + 1] === 10) ends.push(end + 2);
+  return starts.some((start) =>
+    ends.some((finish) =>
+      Buffer.concat([body.subarray(0, start), body.subarray(finish)]).equals(
+        expected,
+      ),
+    ),
+  );
 }
 
 async function verify(
@@ -298,12 +304,14 @@ async function verify(
       matchesWithNetlifyBadge(body, expected, siteId);
     if (!exact && !badge) {
       const html = /^\s*</.test(body.subarray(0, 512).toString("utf8"));
-      const hint =
+      let hint =
         name === "docia-release.txt" && html
           ? "Se recibió HTML en lugar del marcador; revisar login/protección de previews y reglas SPA."
           : name === "docia-release.txt"
             ? "El marcador recibido tiene bytes diferentes; revisar la versión y los archivos del deploy."
             : "Revisar transformaciones, snippets y los archivos del deploy.";
+      if (name === "index.html")
+        hint += ` HTML esperado: ${expected.length} bytes; recibido: ${body.length} bytes; referencia al script HUD: ${body.includes(Buffer.from("/.netlify/scripts/hud")) ? "presente" : "ausente"}.`;
       fail(
         `${component} (${phase}): HTTP ${response.status}, el contenido de ${origin}/${name} no coincide con la release. ${hint} No se imprime el cuerpo recibido.`,
       );
